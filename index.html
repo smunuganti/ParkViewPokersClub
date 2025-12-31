@@ -4,655 +4,484 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=0, viewport-fit=cover">
     
-    <!-- iOS / Android Standalone App Tags -->
+    <!-- Apple Web App & Standalone Configuration -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Poker Club">
+    <meta name="apple-mobile-web-app-title" content="Poker 2026">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="theme-color" content="#020617">
     
-    <!-- App Icon (Fluent Emoji Fireworks) -->
+    <!-- App Icons (Festive Celebration) -->
     <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 fill=%22%23020617%22/><text y=%22.9em%22 font-size=%2280%22 x=%2210%22>🎆</text></svg>">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎆</text></svg>">
 
-    <!-- Web App Manifest -->
-    <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIlBhcmsgVmlldyBQb2tlcnMgQ2x1YiIsCiAgInNob3J0X25hbWUiOiAiUG9rZXIgQ2x1YiIsCiAgInN0YXJ0X3VybCI6ICIuIiwKICAiZGlzcGxheSI6ICJzdGFuZGFsb25lIiwKICAiYmFja2dyb3VuZF9jb2xvciI6ICIjMDIwNjE3IiwKICAidGhlbWVfY29sb3IiOiAiIzAyMDYxNyIKfQ==">
-
-    <title>Park View Pokers Club - 2026</title>
+    <title>Park View Pokers Club - Final 2026 Build</title>
     
-    <!-- Tailwind CSS -->
+    <!-- Frameworks -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- React Ecosystem -->
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    
-    <!-- Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 
     <style>
+        /* CELEBRATION ANIMATIONS */
         @keyframes confetti-fall {
             0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
             100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
         }
-        .animate-confetti {
-            animation: confetti-fall linear infinite;
+        @keyframes card-fall {
+            0% { transform: translateY(-15vh) rotate(0deg) translateX(0); opacity: 0; }
+            10% { opacity: 0.8; }
+            90% { opacity: 0.8; }
+            100% { transform: translateY(105vh) rotate(720deg) translateX(20px); opacity: 0; }
         }
-        
-        /* Layout & Scrolling */
+        @keyframes firework-burst {
+            0%, 100% { transform: scale(1); opacity: 0.8; filter: blur(1px); }
+            50% { transform: scale(1.1); opacity: 1; filter: blur(0px); }
+        }
+        @keyframes spark-float {
+            0% { transform: translateY(0) scale(1); opacity: 1; }
+            100% { transform: translateY(-100px) scale(0); opacity: 0; }
+        }
+        @keyframes rocket-soar {
+            0% { transform: translateY(100vh) scale(1.2); opacity: 1; }
+            75% { opacity: 1; }
+            100% { transform: translateY(var(--target-y)) scale(0.5); opacity: 0; }
+        }
+        @keyframes explosion-pop {
+            0% { transform: scale(0); opacity: 1; }
+            50% { opacity: 1; }
+            100% { transform: scale(5); opacity: 0; }
+        }
+        @keyframes particle-drift {
+            0% { transform: translate(0, 0); opacity: 1; }
+            100% { transform: translate(var(--p-x), var(--p-y)); opacity: 0; }
+        }
+
+        .animate-confetti { animation: confetti-fall linear infinite; }
+        .animate-cards { animation: card-fall linear infinite; }
+        .animate-firework { animation: firework-burst 2s infinite ease-in-out; }
+        .animate-spark { animation: spark-float 1.5s infinite linear; }
+        .animate-rocket { animation: rocket-soar linear infinite; }
+        .animate-pop { animation: explosion-pop ease-out infinite; }
+        .animate-bit { animation: particle-drift ease-out infinite; }
+
         ::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        .custom-scrollbar::-webkit-scrollbar { display: block; width: 4px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #fbbf24; border-radius: 10px; opacity: 0.3; }
         
         body {
             overflow: hidden;
             -webkit-tap-highlight-color: transparent;
             font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
             user-select: none;
-            background-color: #020617;
-            /* Prevent accidental refresh/bounce on mobile */
-            overscroll-behavior: none;
             height: 100vh;
             width: 100vw;
+            transition: background-color 0.5s ease;
         }
         
-        /* Modern Glassmorphism */
         .glass-panel {
-            background: rgba(255, 255, 255, 0.03);
+            background: rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .btn-active:active {
-            transform: scale(0.96);
-        }
-
-        .gold-glow {
-            text-shadow: 0 0 15px rgba(251, 191, 36, 0.5);
-        }
-
-        input {
-            user-select: text;
-        }
+        .btn-active:active { transform: scale(0.96); }
+        input { user-select: text; }
         
-        /* iOS Notch Spacing */
         .pt-safe { padding-top: env(safe-area-inset-top); }
         .pb-safe { padding-bottom: env(safe-area-inset-bottom); }
+
+        .gold-glow {
+            text-shadow: 0 0 15px rgba(253, 224, 71, 0.6);
+        }
     </style>
 </head>
-<body class="text-slate-100">
+<body id="app-body">
     <div id="root"></div>
 
     <script type="text/babel">
         const { useState, useEffect, useRef, useMemo } = React;
 
-        /**
-         * Enhanced Icon component. 
-         * Manages its own lifecycle to prevent React reconciliation conflicts with external DOM manipulation libraries.
-         */
-        const Icon = ({ name, size = 20, className = "", strokeWidth = 2, fill = "none" }) => {
+        const Icon = ({ name, size = 20, className = "" }) => {
             const containerRef = useRef(null);
             useEffect(() => {
                 if (containerRef.current && window.lucide) {
-                    containerRef.current.innerHTML = `<i data-lucide="${name}" style="width: ${size}px; height: ${size}px;" stroke-width="${strokeWidth}" fill="${fill}"></i>`;
+                    containerRef.current.innerHTML = `<i data-lucide="${name}" style="width:${size}px;height:${size}px;"></i>`;
                     window.lucide.createIcons({ targets: [containerRef.current] });
                 }
-            }, [name, size, strokeWidth, fill]);
+            }, [name, size]);
             return <span ref={containerRef} className={`inline-flex items-center justify-center shrink-0 ${className}`} style={{ width: size, height: size }}></span>;
         };
 
-        // --- System Logic ---
-        const STORAGE_VER = "v151_hosting_ready"; 
-        const STORAGE_KEY = `pvp_club_ledger_${STORAGE_VER}`;
-        const THEME_KEY = `pvp_theme_${STORAGE_VER}`;
+        const STORAGE_KEY = "pvp_club_master_2026_final";
+        const THEME_KEY = "pvp_theme_2026_mode";
         const DEFAULT_ROSTER = ['Player 1', 'Player 2', 'Player 3'];
+
+        // --- Countdown Component ---
+        const CountdownTimer = ({ isDarkMode }) => {
+            const [timeLeft, setTimeLeft] = useState({ h: 0, m: 0, s: 0, finished: false });
+
+            useEffect(() => {
+                const target = new Date("2026-01-01T00:00:00").getTime();
+                const timer = setInterval(() => {
+                    const now = new Date().getTime();
+                    const diff = target - now;
+                    if (diff < 0) {
+                        setTimeLeft({ h: 0, m: 0, s: 0, finished: true });
+                        clearInterval(timer);
+                    } else {
+                        const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                        const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                        const s = Math.floor((diff % (1000 * 60)) / 1000);
+                        setTimeLeft({ h, m, s, finished: false });
+                    }
+                }, 1000);
+                return () => clearInterval(timer);
+            }, []);
+
+            if (timeLeft.finished) {
+                return (
+                    <div className={`${isDarkMode ? 'bg-yellow-600/30 text-yellow-400 border-yellow-500/30' : 'bg-orange-500 text-white border-orange-400'} backdrop-blur-md px-10 py-2 rounded-full text-xs font-black uppercase tracking-[0.2em] mb-12 inline-block border shadow-2xl animate-pulse`}>
+                        Happy New Year 2026
+                    </div>
+                );
+            }
+
+            return (
+                <div className="flex flex-col items-center mb-10 relative z-20">
+                    <div className="text-[10px] font-black uppercase tracking-[0.3em] mb-2 opacity-50">Welcome 2026</div>
+                    <div className="flex gap-4">
+                        {[{ v: timeLeft.h, l: 'Hrs' }, { v: timeLeft.m, l: 'Min' }, { v: timeLeft.s, l: 'Sec' }].map((unit, i) => (
+                            <div key={i} className="flex flex-col items-center">
+                                <div className={`text-4xl font-black tabular-nums ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>{String(unit.v).padStart(2, '0')}</div>
+                                <div className="text-[8px] font-bold uppercase tracking-widest opacity-40">{unit.l}</div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            );
+        };
+
+        // --- Rocket Blast Effect ---
+        const RocketBlasts = () => {
+            const rockets = useMemo(() => Array.from({ length: 4 }).map((_, i) => ({
+                id: i, left: 15 + i * 23, targetY: 12 + Math.random() * 25 + 'vh',
+                duration: 2.2 + Math.random() * 1.5, delay: Math.random() * 5
+            })), []);
+
+            return (
+                <div className="fixed inset-0 pointer-events-none z-30">
+                    {rockets.map(r => (
+                        <div key={r.id} className="absolute inset-0">
+                            <div className="absolute animate-rocket bg-yellow-400 w-0.5 h-12 rounded-full blur-[1px]"
+                                 style={{ left: `${r.left}%`, '--target-y': r.targetY, animationDuration: `${r.duration}s`, animationDelay: `${r.delay}s` }}>
+                                <div className="absolute top-full left-1/2 -translate-x-1/2 w-4 h-16 bg-gradient-to-t from-transparent via-orange-500 to-yellow-300 opacity-50"></div>
+                            </div>
+                            <div className="absolute" style={{ left: `${r.left}%`, top: r.targetY }}>
+                                <div className="absolute -translate-x-1/2 -translate-y-1/2 w-16 h-16 rounded-full bg-yellow-400 blur-xl animate-pop opacity-0"
+                                     style={{ animationDuration: `${r.duration}s`, animationDelay: `${r.delay + r.duration * 0.75}s` }}></div>
+                                {[...Array(12)].map((_, pi) => (
+                                    <div key={pi} className="absolute w-1.5 h-1.5 rounded-full bg-orange-400 animate-bit opacity-0"
+                                         style={{ 
+                                            '--p-x': `${(Math.random() - 0.5) * 220}px`, 
+                                            '--p-y': `${(Math.random() - 0.5) * 220}px`, 
+                                            animationDuration: `${r.duration}s`, 
+                                            animationDelay: `${r.delay + r.duration * 0.75}s` 
+                                        }}></div>
+                                ))}
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            );
+        };
+
+        // --- Persistent Card Symbols Rain ---
+        const CardRain = ({ isDarkMode }) => {
+            const symbols = useMemo(() => {
+                const icons = ['spade', 'heart', 'diamond', 'club'];
+                return Array.from({ length: 40 }).map((_, i) => {
+                    const name = icons[i % 4];
+                    let color = isDarkMode ? '#fde047' : '#f59e0b';
+                    if (name === 'heart' || name === 'diamond') color = '#ef4444';
+                    return {
+                        id: i, name, color,
+                        left: Math.random() * 100,
+                        size: 16 + Math.random() * 14,
+                        duration: 6 + Math.random() * 9,
+                        delay: Math.random() * 12
+                    };
+                });
+            }, [isDarkMode]);
+
+            return (
+                <div className="fixed inset-0 pointer-events-none overflow-hidden z-10">
+                    {symbols.map(s => (
+                        <div key={s.id} className="absolute animate-cards" 
+                             style={{ left: `${s.left}%`, animationDuration: `${s.duration}s`, animationDelay: `${s.delay}s`, color: s.color }}>
+                            <Icon name={s.name} size={s.size} />
+                        </div>
+                    ))}
+                </div>
+            );
+        };
+
+        const FireworksDisplay = ({ isDarkMode }) => (
+            <div className="relative w-64 h-64 mx-auto mb-6 flex items-center justify-center">
+                <div className={`absolute inset-0 rounded-full blur-[60px] opacity-20 ${isDarkMode ? 'bg-yellow-500' : 'bg-orange-500'}`}></div>
+                <div className="relative z-20 flex flex-col items-center animate-firework">
+                    <div className={`text-7xl font-black italic tracking-tighter ${isDarkMode ? 'text-yellow-400 gold-glow' : 'text-orange-600'} drop-shadow-2xl`}>2026</div>
+                    <div className={`text-[10px] font-black uppercase tracking-[0.4em] mt-[-8px] ${isDarkMode ? 'text-white/60' : 'text-slate-500'}`}>Official Club</div>
+                </div>
+                {[...Array(12)].map((_, i) => (
+                    <div key={i} className={`absolute w-1 h-1 rounded-full animate-spark ${isDarkMode ? 'bg-yellow-300' : 'bg-orange-400'}`}
+                         style={{ left: `${20 + Math.random() * 60}%`, top: `${40 + Math.random() * 40}%`, animationDelay: `${Math.random() * 2}s` }}></div>
+                ))}
+            </div>
+        );
+
+        const ConfettiSky = ({ isDarkMode }) => {
+            const items = useMemo(() => {
+                const colors = isDarkMode ? ['#fde047', '#ffffff', '#ca8a04'] : ['#f87171', '#60a5fa', '#34d399'];
+                return Array.from({ length: 30 }).map((_, i) => ({
+                    id: i, color: colors[i % colors.length], left: Math.random() * 100,
+                    size: 3, dur: 5 + Math.random() * 6, del: Math.random() * 6
+                }));
+            }, [isDarkMode]);
+            return (
+                <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
+                    {items.map(c => (
+                        <div key={c.id} className="absolute animate-confetti" style={{ left: `${c.left}%`, backgroundColor: c.color, width: c.size, height: c.size, animationDuration: `${c.dur}s`, animationDelay: `${c.del}s`, borderRadius: '50%' }}></div>
+                    ))}
+                </div>
+            );
+        };
 
         const App = () => {
             const [showWelcome, setShowWelcome] = useState(true);
             const [isDarkMode, setIsDarkMode] = useState(() => {
-                try { return localStorage.getItem(THEME_KEY) !== 'light'; } catch(e) { return true; }
+                const saved = localStorage.getItem(THEME_KEY);
+                return saved === null ? true : saved === 'true';
             });
 
-            // --- Game State Engine ---
             const [game, setGame] = useState(() => {
-                try {
-                    const data = localStorage.getItem(STORAGE_KEY);
-                    if (data) {
-                        const parsed = JSON.parse(data);
-                        if (parsed && Array.isArray(parsed.players)) return parsed;
-                    }
-                } catch(e) {}
-                return { 
-                    players: DEFAULT_ROSTER, 
-                    rounds: [], 
-                    history: [], 
-                    inactive: [],
-                    reEntries: new Array(DEFAULT_ROSTER.length).fill(0)
-                };
+                const data = localStorage.getItem(STORAGE_KEY);
+                if (data) return JSON.parse(data);
+                return { players: DEFAULT_ROSTER, rounds: [], history: [], inactive: [], reEntries: new Array(DEFAULT_ROSTER.length).fill(0) };
             });
 
-            const [isAddingRound, setIsAddingRound] = useState(false);
-            const [editingRoundIdx, setEditingRoundIdx] = useState(null); 
-            const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-            const [isHistoryOpen, setIsHistoryOpen] = useState(false);
-            const [bustedOverlay, setBustedOverlay] = useState(null); 
-            const [confirmModal, setConfirmModal] = useState(null); 
-            const [newScores, setNewScores] = useState({});
-            const [newPlayerName, setNewPlayerName] = useState('');
-            const [editIdx, setEditIdx] = useState(null);
-            const [editValue, setEditValue] = useState('');
-            const [error, setError] = useState(null);
-            const [shareFeedback, setShareFeedback] = useState(false);
-            
+            const [ui, setUi] = useState({ add: false, editIdx: null, settings: false, history: false, bust: null, confirm: null });
+            const [form, setForm] = useState({ scores: {}, name: '', editIdx: null, editVal: '', error: null });
             const scrollRef = useRef(null);
 
-            // --- Calculations ---
             const players = game.players;
             const rounds = game.rounds;
             const inactive = game.inactive || [];
             const reEntries = game.reEntries || new Array(players.length).fill(0);
             const sessionHistory = game.history || [];
 
-            const getPlayerName = (idx) => {
-                const p = players[idx];
-                if (!p) return "Unknown";
-                return typeof p === 'object' ? (p.name || `Player ${idx + 1}`) : p;
-            };
+            const totals = useMemo(() => players.map((_, pIdx) => rounds.reduce((sum, r) => sum + (r[pIdx] || 0), 0)), [players, rounds]);
+            const activeTotals = useMemo(() => totals.filter((_, i) => !inactive.includes(i)), [totals, inactive]);
+            const leaderIdx = useMemo(() => rounds.length === 0 ? -1 : totals.findIndex((t, i) => !inactive.includes(i) && t === Math.min(...activeTotals)), [totals, inactive, activeTotals, rounds]);
+            const matchOver = (players.length - inactive.length) <= 1 && rounds.length > 0;
 
-            const totals = useMemo(() => {
-                return players.map((_, pIdx) => 
-                    rounds.reduce((sum, r) => sum + (Array.isArray(r) ? (r[pIdx] || 0) : 0), 0)
-                );
-            }, [players, rounds]);
-
-            const activeCount = players.length - inactive.length;
-            const matchOver = activeCount <= 1 && rounds.length > 0;
-
-            const minTotal = useMemo(() => {
-                const activeTotals = totals.filter((_, i) => !inactive.includes(i));
-                return activeTotals.length > 0 ? Math.min(...activeTotals) : 0;
-            }, [totals, inactive]);
-
-            const leaderIdx = useMemo(() => {
-                if (rounds.length === 0) return -1;
-                return totals.findIndex((t, i) => !inactive.includes(i) && t === minTotal);
-            }, [totals, inactive, minTotal, rounds]);
-
-            const canRejoin = useMemo(() => {
-                if (!bustedOverlay) return false;
-                const others = bustedOverlay.projected.filter((_, i) => i !== bustedOverlay.currentIdx && !inactive.includes(i));
-                return !others.some(t => t >= 180);
-            }, [bustedOverlay, inactive]);
-
-            // --- Persistence ---
             useEffect(() => {
                 localStorage.setItem(STORAGE_KEY, JSON.stringify(game));
-                localStorage.setItem(THEME_KEY, isDarkMode ? 'dark' : 'light');
-                if (!isAddingRound && !editingRoundIdx && scrollRef.current && game.rounds.length > 0) {
-                    scrollRef.current.scrollTo({ top: scrollRef.current.scrollHeight, behavior: 'smooth' });
+                localStorage.setItem(THEME_KEY, isDarkMode.toString());
+                document.body.style.backgroundColor = isDarkMode ? "#020617" : "#f1f5f9";
+            }, [game, isDarkMode]);
+
+            const submitScores = (isEditing = false) => {
+                const entry = players.map((p, i) => inactive.includes(i) ? 0 : parseInt(form.scores[p] || 0));
+                if (entry.filter((s, i) => !inactive.includes(i) && s === 0).length !== 1) {
+                    setForm(f => ({ ...f, error: "Missing score or multiple winners (0)." })); return;
                 }
-            }, [game, isDarkMode, isAddingRound, editingRoundIdx]);
-
-            // --- Functional Logic ---
-            const handleScoreEntry = (isEdit = false) => {
-                setError(null);
-                const entry = players.map((p, i) => {
-                    if (inactive.includes(i)) return 0;
-                    const pName = typeof p === 'object' ? p.name : p;
-                    const v = newScores[pName];
-                    return (v === "" || v === undefined) ? null : parseInt(v);
-                });
-
-                if (entry.some((s, i) => !inactive.includes(i) && (s === null || isNaN(s)))) {
-                    setError("Score required for all active players.");
-                    return;
-                }
-                
-                const activeScores = entry.filter((_, i) => !inactive.includes(i));
-                if (activeScores.filter(s => s === 0).length !== 1) {
-                    setError("Exactly one player must win the hand (score 0).");
-                    return;
-                }
-
-                if (isEdit) {
-                    const updatedRounds = [...rounds];
-                    updatedRounds[editingRoundIdx] = entry;
-                    setGame(prev => ({ ...prev, rounds: updatedRounds }));
-                    setEditingRoundIdx(null);
-                    setNewScores({});
-                    return;
-                }
-
-                const projected = totals.map((t, i) => t + (entry[i] || 0));
-                const bustedIdxs = projected.map((t, i) => (!inactive.includes(i) && t > 201) ? i : -1).filter(i => i !== -1);
-
-                if (bustedIdxs.length > 0) {
-                    const safePlayers = projected.filter((t, i) => !bustedIdxs.includes(i) && !inactive.includes(i));
-                    const target = (safePlayers.length > 0 ? Math.max(...safePlayers) : 0) + 1;
-                    setBustedOverlay({ indices: bustedIdxs, currentIdx: bustedIdxs[0], target, pending: entry, projected });
+                if (isEditing) {
+                    const up = [...rounds]; up[ui.editIdx] = entry;
+                    setGame(g => ({ ...g, rounds: up }));
+                    setUi(u => ({ ...u, editIdx: null })); setForm(f => ({ ...f, scores: {} }));
                 } else {
-                    saveHand(entry);
-                }
-            };
-
-            const saveHand = (scores) => {
-                setGame(prev => ({ ...prev, rounds: [...prev.rounds, scores] }));
-                setNewScores({});
-                setIsAddingRound(false);
-                setBustedOverlay(null);
-            };
-
-            const handleBustChoice = (rejoin) => {
-                const scores = [...bustedOverlay.pending];
-                const pIdx = bustedOverlay.currentIdx;
-                const others = bustedOverlay.projected.filter((_, idx) => idx !== pIdx && !inactive.includes(idx));
-                const isDoorClosed = others.some(t => t >= 180);
-
-                let updatedInactive = [...inactive];
-                let updatedReEntries = [...reEntries];
-
-                if (rejoin && !isDoorClosed) {
-                    scores[pIdx] = bustedOverlay.target - totals[pIdx];
-                    updatedReEntries[pIdx] = (updatedReEntries[pIdx] || 0) + 1;
-                } else {
-                    if (!updatedInactive.includes(pIdx)) updatedInactive.push(pIdx);
-                }
-
-                const nextIdxs = bustedOverlay.indices.filter(i => i !== pIdx);
-                if (nextIdxs.length === 0) {
-                    setGame(prev => ({ ...prev, inactive: updatedInactive, reEntries: updatedReEntries }));
-                    saveHand(scores);
-                } else {
-                    setBustedOverlay({ ...bustedOverlay, currentIdx: nextIdxs[0], indices: nextIdxs, pending: scores });
-                    setGame(prev => ({ ...prev, inactive: updatedInactive, reEntries: updatedReEntries }));
-                }
-            };
-
-            const addPlayer = (midGame = false) => {
-                const name = newPlayerName.trim();
-                if (!name || players.length >= 7) return;
-
-                if (midGame && rounds.length > 0) {
-                    const activeTotals = totals.filter((_, i) => !inactive.includes(i));
-                    const activeHighest = activeTotals.length > 0 ? Math.max(...activeTotals) : Math.max(...totals);
-                    const joinScore = activeHighest + 1;
-                    
-                    setGame(prev => ({
-                        ...prev,
-                        players: [...prev.players, name],
-                        rounds: prev.rounds.map((r, i) => i === 0 ? [...r, joinScore] : [...r, 0]),
-                        reEntries: [...(prev.reEntries || new Array(prev.players.length).fill(0)), 0]
-                    }));
-                    setNewPlayerName('');
-                } else {
-                    if (rounds.length > 0) {
-                        setConfirmModal({
-                            message: "Roster changes reset current scores. Proceed?",
-                            onConfirm: () => {
-                                setGame(p => ({ 
-                                    ...p, players: [...p.players, name], rounds: [], inactive: [], 
-                                    reEntries: new Array(p.players.length + 1).fill(0) 
-                                }));
-                                setNewPlayerName('');
-                                setConfirmModal(null);
-                            }
-                        });
+                    const proj = totals.map((t, i) => t + (entry[i] || 0));
+                    const busted = proj.map((t, i) => (!inactive.includes(i) && t > 201) ? i : -1).filter(i => i !== -1);
+                    if (busted.length > 0) {
+                        const others = proj.filter((t, i) => !busted.includes(i) && !inactive.includes(i));
+                        const target = (others.length > 0 ? Math.max(...others) : 0) + 1;
+                        setUi(u => ({ ...u, bust: { idxs: busted, current: busted[0], target, pending: entry, proj } }));
                     } else {
-                        setGame(p => ({ 
-                            ...p, players: [...p.players, name], rounds: [], inactive: [], 
-                            reEntries: new Array(p.players.length + 1).fill(0) 
-                        }));
-                        setNewPlayerName('');
+                        setGame(g => ({ ...g, rounds: [...g.rounds, entry] }));
+                        setUi(u => ({ ...u, add: false })); setForm(f => ({ ...f, scores: {} }));
                     }
                 }
             };
 
-            const removePlayer = (idx) => {
-                if (players.length <= 2) return;
-                setConfirmModal({
-                    message: `Expel ${getPlayerName(idx)}? All scores will reset.`,
-                    onConfirm: () => {
-                        setGame(s => ({ ...s, players: s.players.filter((_, i) => i !== idx), rounds: [], inactive: [], reEntries: [] }));
-                        setConfirmModal(null);
-                    }
-                });
+            const solveBust = (rejoin) => {
+                const scores = [...ui.bust.pending];
+                const pIdx = ui.bust.current;
+                const locked = ui.bust.proj.some((t, i) => i !== pIdx && !inactive.includes(i) && t >= 180);
+                let upIn = [...inactive]; let upRe = [...reEntries];
+                if (rejoin && !locked) {
+                    scores[pIdx] = ui.bust.target - totals[pIdx];
+                    upRe[pIdx] = (upRe[pIdx] || 0) + 1;
+                } else if (!upIn.includes(pIdx)) upIn.push(pIdx);
+                const next = ui.bust.idxs.filter(i => i !== pIdx);
+                if (next.length === 0) {
+                    setGame(g => ({ ...g, inactive: upIn, reEntries: upRe, rounds: [...g.rounds, scores] }));
+                    setUi(u => ({ ...u, bust: null, add: false })); setForm(f => ({ ...f, scores: {} }));
+                } else setUi(u => ({ ...u, bust: { ...u.bust, current: next[0], idxs: next, pending: scores } }));
             };
 
-            const savePlayerNameEdit = (idx) => {
-                if (!editValue.trim()) return;
-                const updatedPlayers = [...players];
-                updatedPlayers[idx] = editValue.trim();
-                setGame(prev => ({ ...prev, players: updatedPlayers }));
-                setEditIdx(null);
-                setEditValue('');
+            const midGameJoin = () => {
+                if(!form.name.trim()) return;
+                const currentHighest = activeTotals.length > 0 ? Math.max(...activeTotals) : 0;
+                setGame(g => ({
+                    ...g, players: [...g.players, form.name.trim()], reEntries: [...g.reEntries, 0],
+                    rounds: g.rounds.map((r, i) => i === 0 ? [...r, currentHighest + 1] : [...r, 0])
+                }));
+                setForm(f => ({ ...f, name: '' }));
             };
-
-            const startNewMatch = () => {
-                const isBoardEmpty = rounds.length === 0;
-                setConfirmModal({
-                    message: isBoardEmpty ? "Reset current totals to 0?" : "Archive match and reset all scores to 0?",
-                    onConfirm: () => {
-                        const sessionSummary = {
-                            id: Date.now(),
-                            date: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
-                            players: players.map((_, i) => getPlayerName(i)),
-                            finalScores: [...totals],
-                            reEntries: [...reEntries]
-                        };
-
-                        setGame(prev => ({
-                            ...prev, 
-                            rounds: [], 
-                            inactive: [], 
-                            reEntries: new Array(prev.players.length).fill(0),
-                            history: [sessionSummary, ...(prev.history || [])].slice(0, 5)
-                        }));
-                        setConfirmModal(null);
-                    }
-                });
-            };
-
-            const shareStandings = async () => {
-                const text = `🎆 Park View Pokers 2026 Standings 🎆\n\n` + 
-                            players.map((_, i) => `${getPlayerName(i)}: ${totals[i]}${reEntries[i] > 0 ? ` (R${reEntries[i]})` : ''}${inactive.includes(i) ? ' (Out)' : ''}`).join('\n');
-                if (navigator.share) {
-                    try { await navigator.share({ title: '2026 Poker Scores', text }); } catch (err) {}
-                } else {
-                    const el = document.createElement('textarea');
-                    el.value = text; document.body.appendChild(el); el.select(); document.execCommand('copy'); document.body.removeChild(el);
-                    setShareFeedback(true); setTimeout(() => setShareFeedback(false), 2000);
-                }
-            };
-
-            // --- UI Elements ---
-            const CelebrationOverlay = () => {
-                const items = useMemo(() => Array.from({ length: 40 }).map((_, i) => ({
-                    id: i, left: Math.random() * 100, delay: Math.random() * 5,
-                    duration: 4 + Math.random() * 6, size: 2 + Math.random() * 3,
-                    color: ['#f59e0b', '#fbbf24', '#ffffff', '#818cf8'][Math.floor(Math.random() * 4)]
-                })), []);
-                return (
-                    <div className="fixed inset-0 pointer-events-none overflow-hidden z-50">
-                        {items.map(p => (
-                            <div key={`confetti-${p.id}`} className="absolute top-[-10px] rounded-sm animate-confetti"
-                                style={{ left: `${p.left}%`, width: `${p.size}px`, height: `${p.size}px`, backgroundColor: p.color, animationDuration: `${p.duration}s`, animationDelay: `${p.delay}s` }}
-                            />
-                        ))}
-                    </div>
-                );
-            };
-
-            const WelcomeVisual = () => (
-                <div className="relative w-48 h-48 mx-auto mb-8 pointer-events-none">
-                    <div className="absolute inset-0 flex items-center justify-center animate-pulse opacity-20">
-                        <Icon name="sparkles" size={180} className="text-yellow-500" />
-                    </div>
-                    <div className="absolute top-0 left-4 w-32 h-48 bg-slate-900 rounded-2xl shadow-xl border-2 border-yellow-500/40 transform -rotate-12 flex flex-col justify-between p-4 text-yellow-500">
-                        <div className="text-left font-black leading-none text-lg">20<br/>26</div>
-                        <div className="flex justify-center"><Icon name="spade" size={48} fill="currentColor" /></div>
-                        <div className="text-right font-black leading-none rotate-180 text-lg">20<br/>26</div>
-                    </div>
-                    <div className="absolute top-2 right-4 w-32 h-48 bg-slate-800 rounded-2xl shadow-2xl border border-indigo-500/30 transform rotate-12 flex flex-col justify-between p-4 text-indigo-400">
-                        <div className="text-left font-black leading-none opacity-40">A</div>
-                        <div className="flex justify-center opacity-30"><Icon name="heart" size={48} fill="currentColor" /></div>
-                        <div className="text-right font-black leading-none rotate-180 opacity-40">A</div>
-                    </div>
-                </div>
-            );
 
             if (showWelcome) {
                 return (
-                    <div className="fixed inset-0 flex flex-col items-center justify-center p-8 transition-colors duration-500 bg-[#020617]">
-                        <CelebrationOverlay />
+                    <div className={`fixed inset-0 flex flex-col items-center justify-center p-8 transition-colors duration-500 overflow-hidden ${isDarkMode ? 'bg-[#020617] text-white' : 'bg-slate-50 text-slate-900'}`}>
+                        {isDarkMode && <div className="absolute inset-0 z-0"><img src="image.png" alt="" className="w-full h-full object-cover opacity-50" onError={(e) => e.target.style.display = 'none'} /><div className="absolute inset-0 bg-gradient-to-t from-[#020617] via-[#020617]/70 to-transparent"></div></div>}
+                        <ConfettiSky isDarkMode={isDarkMode} />
+                        <CardRain isDarkMode={isDarkMode} />
+                        <RocketBlasts />
                         <div className="max-w-sm w-full text-center relative z-10">
-                            <div className="bg-gradient-to-r from-yellow-700 to-amber-400 text-black px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-widest mb-6 inline-block shadow-[0_0_25px_rgba(234,179,8,0.4)]">New Year 2026</div>
-                            <WelcomeVisual />
-                            <h1 className="text-3xl font-black uppercase italic text-yellow-500 mb-1 leading-none tracking-tighter gold-glow">Park View Pokers</h1>
-                            <h2 className="text-5xl font-black uppercase tracking-widest mb-12 text-slate-400 leading-none">Club</h2>
-                            <button onClick={() => setShowWelcome(false)} className="w-full h-16 bg-yellow-600 hover:bg-yellow-500 text-black rounded-3xl font-black uppercase tracking-widest shadow-2xl active:scale-95 transition-all flex items-center justify-center gap-3">
-                                Start Session <Icon name="chevron-right" />
-                            </button>
-                            <button onClick={() => setIsDarkMode(!isDarkMode)} className="mt-12 p-4 bg-white/5 border border-white/10 rounded-full hover:bg-white/10 transition-colors">
-                                <Icon name={isDarkMode ? "sun" : "moon"} className="text-yellow-500" />
-                            </button>
+                            <CountdownTimer isDarkMode={isDarkMode} />
+                            <FireworksDisplay isDarkMode={isDarkMode} />
+                            <h1 className={`text-3xl font-black uppercase italic mb-1 ${isDarkMode ? 'text-yellow-500' : 'text-orange-600'}`}>Park View Pokers</h1>
+                            <h2 className={`text-5xl font-black uppercase tracking-widest mb-12 ${isDarkMode ? 'text-slate-300' : 'text-slate-500'}`}>Club</h2>
+                            <div className="flex gap-2">
+                                <button onClick={() => setShowWelcome(false)} className={`flex-1 h-16 rounded-3xl font-black uppercase tracking-widest shadow-2xl transition-all btn-active ${isDarkMode ? 'bg-orange-600' : 'bg-orange-500 text-white'}`}>Open Match</button>
+                                <button onClick={() => setIsDarkMode(!isDarkMode)} className={`w-16 h-16 rounded-3xl flex items-center justify-center shadow-2xl btn-active ${isDarkMode ? 'bg-slate-800 text-yellow-400' : 'bg-white border'}`}><Icon name={isDarkMode ? "sun" : "moon"} /></button>
+                            </div>
                         </div>
                     </div>
                 );
             }
 
             return (
-                <div className={`fixed inset-0 flex flex-col transition-colors duration-500 ${isDarkMode ? 'bg-[#020617]' : 'bg-white text-slate-900'}`}>
-                    <CelebrationOverlay />
+                <div className={`fixed inset-0 flex flex-col transition-colors duration-500 overflow-hidden ${isDarkMode ? 'bg-[#020617] text-slate-100' : 'bg-slate-50 text-slate-900'}`}>
+                    <ConfettiSky isDarkMode={isDarkMode} />
+                    <CardRain isDarkMode={isDarkMode} />
                     
-                    <nav className={`flex-none px-4 py-4 z-40 pt-safe ${isDarkMode ? 'bg-slate-900/50 border-b border-white/10 backdrop-blur-md' : 'bg-white border-b border-slate-200'}`}>
+                    <nav className={`flex-none px-4 py-4 z-40 pt-safe border-b backdrop-blur-xl ${isDarkMode ? 'bg-slate-900/70 border-white/10' : 'bg-white/90 border-slate-200'}`}>
                         <div className="max-w-4xl mx-auto flex items-center justify-between">
                             <div className="flex items-center gap-2">
-                                <div className="w-10 h-10 bg-gradient-to-br from-yellow-700 to-amber-400 rounded-2xl flex items-center justify-center text-black shadow-lg"><Icon name="sparkles" /></div>
-                                <div className="text-left leading-none">
-                                    <h1 className="text-[11px] font-black uppercase text-yellow-500">Park View Pokers</h1>
-                                    <span className="text-[9px] font-bold text-slate-400 uppercase opacity-60">2026 Session</span>
-                                </div>
+                                <button onClick={() => setShowWelcome(true)} className={`w-10 h-10 rounded-2xl flex items-center justify-center text-white shadow-lg btn-active ${isDarkMode ? 'bg-orange-500' : 'bg-orange-600'}`}><Icon name="home" /></button>
+                                <div className="text-left leading-none"><h1 className={`text-[11px] font-black uppercase tracking-tight ${isDarkMode ? 'text-yellow-400' : 'text-orange-600'}`}>PV Pokers</h1><span className="text-[9px] font-bold uppercase opacity-80">2026 Session</span></div>
                             </div>
                             <div className="flex items-center gap-1">
-                                <button onClick={startNewMatch} className="p-2 opacity-50 hover:text-yellow-500 transition-colors btn-active"><Icon name="rotate-ccw" /></button>
-                                <button onClick={() => setIsHistoryOpen(true)} className="p-2 opacity-50 hover:text-indigo-400 transition-colors btn-active"><Icon name="history" /></button>
-                                <button onClick={() => setIsDarkMode(!isDarkMode)} className="p-2 opacity-50 btn-active"><Icon name={isDarkMode ? "sun" : "moon"} /></button>
-                                <button onClick={() => setIsSettingsOpen(true)} className="p-2 opacity-50 hover:text-yellow-500 transition-colors btn-active"><Icon name="settings-2" /></button>
+                                <button onClick={() => setIsDarkMode(!isDarkMode)} className="p-2 opacity-70 btn-active transition-colors"><Icon name={isDarkMode ? "sun" : "moon"} /></button>
+                                <button onClick={() => setUi({...ui, history: true})} className="p-2 opacity-70 btn-active transition-colors"><Icon name="history" /></button>
+                                <button onClick={() => setUi({...ui, settings: true})} className="p-2 opacity-70 btn-active transition-colors"><Icon name="settings-2" /></button>
                             </div>
                         </div>
                     </nav>
 
                     <div className="flex-1 flex flex-col overflow-hidden relative">
-                        <div className={`flex-none flex border-b-2 z-20 ${isDarkMode ? 'bg-slate-950 border-white/5 shadow-xl' : 'bg-white border-slate-200'}`}>
-                            <div className="w-10 text-[8px] font-black text-slate-500 uppercase flex items-center justify-center italic">Hand</div>
+                        <div className={`flex-none flex border-b-2 z-20 ${isDarkMode ? 'bg-slate-950 border-white/10 shadow-lg' : 'bg-slate-100'}`}>
+                            <div className="w-10 text-[8px] font-black flex items-center justify-center italic text-slate-500">Hand</div>
                             <div className="flex-1 flex">
-                                {players.map((_, i) => (
-                                    <div key={`header-p-${i}`} className={`flex-1 border-r last:border-r-0 py-3 text-center truncate ${inactive.includes(i) ? 'opacity-30 grayscale bg-black/5' : ''}`}>
-                                        <div className="flex flex-col items-center justify-center gap-0.5 px-0.5">
-                                            <span className="text-[10px] font-black uppercase truncate block w-full text-yellow-500/80 tracking-tight">{getPlayerName(i)}</span>
-                                            {reEntries[i] > 0 && <span className="bg-indigo-600 text-white text-[6px] px-1 rounded-sm font-black leading-none py-1">R{reEntries[i]}</span>}
-                                        </div>
+                                {players.map((p, i) => (
+                                    <div key={i} className={`flex-1 border-r last:border-r-0 py-3 text-center truncate ${inactive.includes(i) ? 'opacity-30 grayscale bg-black/5' : ''}`}>
+                                        <div className="flex flex-col items-center justify-center px-0.5"><span className={`text-[10px] font-black uppercase truncate block w-full tracking-tight ${isDarkMode ? 'text-orange-400' : 'text-orange-700'}`}>{p}</span>{reEntries[i] > 0 && <span className="bg-indigo-600 text-white text-[6px] px-1 rounded-sm leading-none py-1">R{reEntries[i]}</span>}</div>
                                     </div>
                                 ))}
                             </div>
                         </div>
-
-                        <div ref={scrollRef} className="flex-1 overflow-y-auto no-scrollbar custom-scrollbar bg-slate-900/5">
+                        <div ref={scrollRef} className="flex-1 overflow-y-auto no-scrollbar bg-black/5">
                             {rounds.map((round, rIdx) => (
-                                <div key={`round-${rIdx}`} className="flex border-b border-white/5 transition-colors hover:bg-white/5">
-                                    <div className="w-10 flex flex-col items-center justify-center py-4 gap-1">
-                                        <span className="text-[10px] font-bold text-slate-500 italic">{rIdx + 1}</span>
-                                        {rIdx >= rounds.length - 2 && (
-                                            <button onClick={() => {
-                                                setEditingRoundIdx(rIdx);
-                                                const current = {};
-                                                players.forEach((p, i) => current[getPlayerName(i)] = round[i]);
-                                                setNewScores(current);
-                                            }} className="text-indigo-500/40 hover:text-indigo-500 btn-active"><Icon name="pencil-line" size={12} /></button>
-                                        )}
-                                    </div>
-                                    <div className="flex-1 flex">
-                                        {round.map((score, cIdx) => (
-                                            <div key={`score-${rIdx}-${cIdx}`} className={`flex-1 border-r last:border-r-0 flex items-center justify-center py-4 ${inactive.includes(cIdx) ? 'opacity-10' : ''}`}>
-                                                {score === 0 ? (
-                                                    <span className="w-7 h-7 rounded-full bg-yellow-600 text-black flex items-center justify-center text-[10px] font-black shadow-[0_0_10px_rgba(234,179,8,0.3)] border border-yellow-400/20">0</span>
-                                                ) : (
-                                                    <span className="text-sm font-bold tabular-nums text-slate-300">{score}</span>
-                                                )}
-                                            </div>
-                                        ))}
-                                    </div>
+                                <div key={rIdx} className={`flex border-b transition-colors ${isDarkMode ? 'border-white/5 hover:bg-white/5' : 'border-slate-200 hover:bg-white'}`}>
+                                    <div className="w-10 flex flex-col items-center justify-center py-4"><span className="text-[10px] font-bold text-slate-500">{rIdx + 1}</span><button onClick={() => { setUi({...ui, editIdx: rIdx}); const c = {}; players.forEach(p => c[p] = round[players.indexOf(p)]); setForm({...form, scores: c}); }} className="text-orange-500/40 mt-1"><Icon name="pencil-line" size={12} /></button></div>
+                                    <div className="flex-1 flex">{round.map((score, cIdx) => (<div key={cIdx} className={`flex-1 border-r last:border-r-0 flex items-center justify-center py-4 ${inactive.includes(cIdx) ? 'opacity-10' : ''}`}>{score === 0 ? <span className="w-7 h-7 rounded-full bg-orange-600 text-white flex items-center justify-center text-[10px] font-black shadow-lg">0</span> : <span className="text-sm font-bold tabular-nums">{score}</span>}</div>))}</div>
                                 </div>
                             ))}
-                            {rounds.length === 0 && <div className="h-full flex flex-col items-center justify-center opacity-10 p-10 grayscale text-center select-none"><Icon name="party-popper" size={64} className="text-yellow-500" /><p className="text-xs font-black uppercase mt-4 tracking-widest italic text-yellow-500">Board Clear</p></div>}
                         </div>
-
-                        <div className={`flex-none flex text-white shadow-[0_-10px_30px_rgba(0,0,0,0.5)] z-30 ${isDarkMode ? 'bg-slate-900 border-t border-white/5' : 'bg-slate-800'}`}>
-                            <div className="w-10 text-[8px] font-black uppercase flex items-center justify-center bg-black/20 italic text-slate-500">Total</div>
+                        <div className={`flex-none flex text-white shadow-[0_-10px_30px_rgba(0,0,0,0.3)] z-30 ${isDarkMode ? 'bg-slate-900 border-t border-white/10' : 'bg-slate-800'}`}>
+                            <div className="w-10 flex items-center justify-center text-[8px] font-black italic bg-black/20 text-slate-500 uppercase">Total</div>
                             <div className="flex-1 flex">
                                 {totals.map((total, i) => (
-                                    <div key={`total-p-${i}`} className={`flex-1 py-4 border-r last:border-r-0 border-white/5 text-center font-black text-lg ${inactive.includes(i) ? 'opacity-50 line-through' : ''}`}>
-                                        <span className="flex items-center justify-center gap-1">
-                                            {total} 
-                                            {i === leaderIdx && !inactive.includes(i) && rounds.length > 0 && <Icon name="trophy" size={14} className="text-yellow-500" fill="#eab308" />}
-                                        </span>
+                                    <div key={i} className={`flex-1 py-4 border-r last:border-r-0 border-white/5 text-center font-black text-lg ${inactive.includes(i) ? 'opacity-50 line-through' : ''}`}>
+                                        <span className="flex items-center justify-center gap-1">{total} {i === leaderIdx && !inactive.includes(i) && rounds.length > 0 && <Icon name="crown" size={14} className="text-yellow-400" />}</span>
                                     </div>
                                 ))}
                             </div>
                         </div>
                     </div>
 
-                    <div className="p-5 pb-safe flex-none border-t bg-slate-900 border-white/10">
+                    <div className={`p-5 pb-safe flex-none border-t ${isDarkMode ? 'bg-slate-900/95 border-white/10' : 'bg-white border-slate-200'}`}>
                         {matchOver ? (
-                            <div className="text-center p-2 animate-in zoom-in-95 duration-700">
-                                <h4 className="text-xl font-black italic text-yellow-500 uppercase mb-3 gold-glow tracking-tight">{getPlayerName(leaderIdx)} Dominates!</h4>
-                                <button onClick={startNewMatch} className="px-10 py-4 bg-indigo-600 text-white rounded-full text-xs font-black uppercase shadow-xl btn-active transition-all tracking-widest">New Match</button>
-                            </div>
+                            <div className="text-center p-2 animate-in zoom-in-95 duration-700"><h4 className="text-xl font-black italic text-orange-500 uppercase mb-3 drop-shadow-xl">2026 Celebration!</h4><button onClick={() => setUi({...ui, confirm: { msg: "Start fresh?", fn: () => { setGame(g => ({ ...g, rounds: [], inactive: [], reEntries: new Array(g.players.length).fill(0) })); setUi({...ui, confirm: null}); } }})} className="px-10 py-4 bg-orange-600 text-white rounded-full text-xs font-black uppercase active:scale-95 transition-all shadow-xl">New Match</button></div>
                         ) : (
                             <div className="flex gap-2 max-w-lg mx-auto">
-                                <button onClick={() => setIsAddingRound(true)} className="flex-1 h-16 bg-yellow-600 text-black rounded-3xl font-black uppercase tracking-widest shadow-xl flex items-center justify-center gap-3 btn-active transition-all">
-                                    <Icon name="plus" size={24} strokeWidth={3} /> Record Hand
-                                </button>
-                                <button onClick={shareStandings} className="px-6 h-16 bg-indigo-600 text-white rounded-2xl font-black shadow-xl flex items-center justify-center btn-active transition-all">
-                                    {shareFeedback ? <Icon name="check" size={24} strokeWidth={3} /> : <Icon name="share-2" size={24} strokeWidth={3} />}
-                                </button>
+                                <button onClick={() => setUi({...ui, add: true})} className="flex-1 h-16 bg-orange-600 text-white rounded-3xl font-black uppercase tracking-widest shadow-xl flex items-center justify-center gap-3 btn-active transition-all"><Icon name="plus" size={24} /> Record Score</button>
                             </div>
                         )}
                     </div>
 
-                    {/* Score Entry Overlay */}
-                    {(isAddingRound || editingRoundIdx !== null) && (
-                        <div className="fixed inset-0 z-[60] flex items-end sm:items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in">
-                            <div className={`w-full max-w-md rounded-[2.5rem] p-8 shadow-2xl border animate-in slide-in-from-bottom-10 ${isDarkMode ? 'bg-slate-900 border-white/10' : 'bg-white border-slate-200'}`}>
-                                <div className="flex justify-between items-center mb-6">
-                                    <h3 className="text-xl font-black text-yellow-500 uppercase italic tracking-tight">{editingRoundIdx !== null ? `Fix Hand ${editingRoundIdx + 1}` : "Record Hand"}</h3>
-                                    <button onClick={() => {setIsAddingRound(false); setEditingRoundIdx(null); setNewScores({});}} className="text-slate-500 p-2 btn-active"><Icon name="x" size={28} /></button>
+                    {/* MODAL SYSTEM */}
+                    {(ui.add || ui.editIdx !== null || ui.settings || ui.history || ui.bust || ui.confirm) && (
+                        <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-black/90 backdrop-blur-sm animate-in fade-in">
+                            {/* Score Entry */}
+                            {(ui.add || ui.editIdx !== null) && (
+                                <div className={`w-full max-w-md rounded-[2.5rem] p-8 shadow-2xl border animate-in slide-in-from-bottom-10 ${isDarkMode ? 'bg-slate-900 border-white/10 text-white' : 'bg-white border-slate-200 text-slate-900'}`}>
+                                    <div className="flex justify-between items-center mb-6"><h3 className="text-xl font-black text-orange-500 uppercase italic tracking-tight">{ui.editIdx !== null ? "Edit Scores" : "Record Hand"}</h3><button onClick={() => setUi({...ui, add: false, editIdx: null})} className="text-slate-500 p-2"><Icon name="x" size={28} /></button></div>
+                                    {form.error && <div className="mb-4 bg-red-500/10 p-3 rounded-xl text-[10px] font-black text-red-500 uppercase animate-bounce">{form.error}</div>}
+                                    <div className="grid grid-cols-2 gap-4 mb-8 max-h-[40vh] overflow-y-auto no-scrollbar">{players.map((p, idx) => !inactive.includes(idx) && (<div key={idx} className="flex flex-col gap-2"><label className="text-[10px] font-black uppercase text-slate-500 truncate tracking-tighter">{p}</label><input type="number" inputMode="numeric" value={form.scores[p] || ''} onChange={e => setForm({...form, scores: {...form.scores, [p]: e.target.value}})} className={`w-full p-5 rounded-2xl text-center text-3xl font-black outline-none border ${isDarkMode ? 'bg-slate-950/50 border-white/5 text-orange-500' : 'bg-slate-50 border-slate-200'}`} placeholder="0" /></div>))}</div>
+                                    <button onClick={() => submitScores(ui.editIdx !== null)} className="w-full bg-orange-600 py-6 rounded-3xl font-black uppercase shadow-xl text-white tracking-widest text-xs btn-active">Confirm Hand</button>
                                 </div>
-                                {error && <div className="mb-4 bg-red-500/10 p-3 rounded-xl text-[10px] font-black text-red-500 uppercase flex items-center gap-2 animate-bounce"><Icon name="shield-alert" size={14}/> {error}</div>}
-                                <div className="grid grid-cols-2 gap-4 mb-8 max-h-[40vh] overflow-y-auto pr-1 custom-scrollbar no-scrollbar">
-                                    {players.map((_, idx) => !inactive.includes(idx) && (
-                                        <div key={`entry-p-${idx}`} className="flex flex-col gap-2">
-                                            <label className="text-[10px] font-black uppercase text-slate-500 mb-1 ml-2 truncate">{getPlayerName(idx)}</label>
-                                            <input type="number" inputMode="numeric" value={newScores[getPlayerName(idx)] || ''} onChange={e => setNewScores({...newScores, [getPlayerName(idx)]: e.target.value})} className="w-full bg-slate-950/50 p-5 rounded-2xl text-center text-3xl font-black outline-none border border-white/5 text-yellow-500 placeholder:text-slate-800" placeholder="0" />
-                                        </div>
-                                    ))}
-                                </div>
-                                <button onClick={() => handleScoreEntry(editingRoundIdx !== null)} className="w-full bg-yellow-600 py-6 rounded-3xl font-black uppercase shadow-xl text-black tracking-widest text-xs btn-active transition-all">Confirm Hand</button>
-                            </div>
-                        </div>
-                    )}
+                            )}
 
-                    {/* Registry Modal */}
-                    {isSettingsOpen && (
-                        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/90 backdrop-blur-md animate-in fade-in">
-                            <div className={`w-full max-w-sm rounded-[2.5rem] p-8 shadow-2xl border ${isDarkMode ? 'bg-slate-900 text-white' : 'bg-white text-slate-900 border-slate-200'}`}>
-                                <h3 className="text-xl font-black text-yellow-500 uppercase mb-8 flex items-center gap-3"><Icon name="users" /> Registry</h3>
-                                <input type="text" value={newPlayerName} onChange={e => setNewPlayerName(e.target.value)} placeholder="Member Name" className="w-full bg-slate-950/50 p-5 rounded-2xl mb-4 font-bold outline-none border border-white/5 text-indigo-400 placeholder:text-slate-700" />
-                                <div className="grid grid-cols-2 gap-2 mb-8">
-                                    <button onClick={() => addPlayer(false)} className="py-4 bg-slate-800 text-white rounded-2xl text-[10px] font-black uppercase border border-white/10 btn-active transition-all">Standard</button>
-                                    <button onClick={() => addPlayer(true)} className="py-4 bg-yellow-600 text-black rounded-2xl text-[10px] font-black uppercase shadow-lg btn-active transition-all">Join @ Max+1</button>
-                                </div>
-                                <div className="space-y-2 mb-8 max-h-48 overflow-y-auto no-scrollbar custom-scrollbar">
-                                    {players.map((_, i) => (
-                                        <div key={`registry-p-${i}`} className="flex items-center justify-between p-4 glass-panel rounded-2xl">
-                                            {editIdx === i ? (
-                                                <div className="flex-1 flex gap-2">
-                                                    <input type="text" value={editValue} onChange={e => setEditValue(e.target.value)} className="flex-1 bg-black/40 px-3 py-1 rounded text-[10px] font-black uppercase outline-none text-yellow-500" autoFocus />
-                                                    <button onClick={() => savePlayerNameEdit(i)} className="text-yellow-500 btn-active"><Icon name="check-circle-2" size={18}/></button>
-                                                </div>
-                                            ) : (
-                                                <>
-                                                    <div className="flex items-center gap-3 truncate">
-                                                        <span className="text-[10px] font-black uppercase truncate text-slate-300">{getPlayerName(i)}</span>
-                                                        {reEntries[i] > 0 && <span className="bg-indigo-600 text-white text-[7px] px-1.5 rounded font-black leading-none py-1 whitespace-nowrap">R{reEntries[i]}</span>}
-                                                    </div>
-                                                    <div className="flex gap-1">
-                                                        <button onClick={() => { setEditIdx(i); setEditValue(getPlayerName(i)); }} className="text-indigo-400/60 p-2 btn-active"><Icon name="pencil" size={16}/></button>
-                                                        <button onClick={() => removePlayer(i)} className="text-red-500 p-2 btn-active"><Icon name="user-minus" size={18}/></button>
-                                                    </div>
-                                                </>
-                                            )}
-                                        </div>
-                                    ))}
-                                </div>
-                                <button onClick={() => setIsSettingsOpen(false)} className="w-full py-5 bg-slate-950 text-white rounded-2xl font-black uppercase tracking-widest text-xs btn-active border border-white/5">Close</button>
-                            </div>
-                        </div>
-                    )}
-
-                    {/* History Modal */}
-                    {isHistoryOpen && (
-                        <div className="fixed inset-0 z-[70] flex items-center justify-center p-4 bg-black/90 backdrop-blur-md animate-in fade-in">
-                            <div className={`w-full max-w-md rounded-[2.5rem] p-8 shadow-2xl border ${isDarkMode ? 'bg-slate-900 text-white' : 'bg-white text-slate-900 border-slate-200'}`}>
-                                <h3 className="text-xl font-black text-indigo-400 uppercase mb-6 flex items-center gap-3"><Icon name="history" /> Archive</h3>
-                                <div className="space-y-4 max-h-[60vh] overflow-y-auto pr-1 no-scrollbar custom-scrollbar">
-                                    {sessionHistory.length === 0 ? (
-                                        <div className="py-20 text-center opacity-20 text-xs font-black uppercase italic tracking-widest">Empty log</div>
-                                    ) : (
-                                        sessionHistory.map((log, hIdx) => (
-                                            <div key={`history-match-${log.id}`} className="p-4 rounded-2xl glass-panel relative border border-white/5 shadow-inner">
-                                                <div className="flex justify-between items-center mb-3 pb-2 border-b border-white/5">
-                                                    <span className="text-[10px] font-black text-yellow-500 uppercase">{log.date}</span>
-                                                    <span className="text-[8px] font-bold text-slate-600 uppercase tracking-widest">SESSION #{sessionHistory.length - hIdx}</span>
-                                                </div>
-                                                <div className="grid grid-cols-2 gap-2">
-                                                    {log.players.map((pName, pIdx) => {
-                                                        const win = log.finalScores[pIdx] === Math.min(...log.finalScores);
-                                                        return (
-                                                            <div key={`hist-${log.id}-${pIdx}`} className="flex items-center justify-between text-[10px] bg-slate-950/50 p-2 rounded-lg border border-white/5">
-                                                                <div className="flex items-center gap-1 truncate">
-                                                                    {win && <Icon name="trophy" size={10} className="text-yellow-500" fill="#eab308" />}
-                                                                    <span className={`font-black uppercase truncate ${win ? 'text-yellow-500' : 'text-slate-500'}`}>{pName}</span>
-                                                                </div>
-                                                                <span className="font-mono font-bold text-indigo-400">{log.finalScores[pIdx]}</span>
-                                                            </div>
-                                                        );
-                                                    })}
-                                                </div>
-                                            </div>
-                                        ))
-                                    )}
-                                </div>
-                                <button onClick={() => setIsHistoryOpen(false)} className="w-full mt-8 py-5 bg-slate-950 text-white rounded-2xl font-black uppercase tracking-widest text-xs btn-active border border-white/5 text-yellow-500">Back</button>
-                            </div>
-                        </div>
-                    )}
-
-                    {/* Bust / Rejoin Decision Overlay */}
-                    {bustedOverlay && (
-                        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/95 backdrop-blur-xl animate-in fade-in">
-                            <div className={`w-full max-sm rounded-[2.5rem] p-8 shadow-2xl border ${isDarkMode ? 'bg-slate-900 text-white' : 'bg-white'}`}>
-                                <div className="text-center mb-8">
-                                    <div className={`w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 border-4 ${canRejoin ? 'bg-yellow-500/10 border-yellow-500/30 text-yellow-500 shadow-[0_0_20px_rgba(234,179,8,0.2)]' : 'bg-slate-500/10 border-slate-500/30 text-slate-500'}`}>
-                                        <Icon name={canRejoin ? "stars" : "door-closed"} size={40} strokeWidth={2.5}/>
+                            {/* Registry */}
+                            {ui.settings && (
+                                <div className={`w-full max-sm rounded-[2.5rem] p-8 shadow-2xl border ${isDarkMode ? 'bg-slate-900 border-white/10 text-white' : 'bg-white border-slate-200 text-slate-900'}`}>
+                                    <h3 className="text-xl font-black text-orange-500 uppercase mb-8 flex items-center gap-3 tracking-tighter"><Icon name="users" /> Registry</h3>
+                                    <input type="text" value={form.name} onChange={e => setForm({...form, name: e.target.value})} placeholder="New Player Name" className={`w-full p-5 rounded-2xl mb-4 font-bold outline-none border ${isDarkMode ? 'bg-slate-950 border-white/5 text-indigo-400' : 'bg-slate-50 border-slate-200 text-slate-900'}`} />
+                                    <div className="grid grid-cols-2 gap-2 mb-8">
+                                        <button onClick={() => { if(form.name) { setGame(g=>({...g, players: [...g.players, form.name.trim()], rounds: [], inactive: [], reEntries: new Array(g.players.length+1).fill(0)})); setForm(f=>({...f, name:''})); setUi(u=>({...u, settings: false})); }}} className={`py-4 rounded-2xl text-[10px] font-black uppercase border btn-active ${isDarkMode ? 'bg-slate-800' : 'bg-slate-100'}`}>Full Reset</button>
+                                        <button onClick={midGameJoin} className="py-4 bg-orange-600 text-white rounded-2xl text-[10px] font-black uppercase shadow-lg btn-active">Join @ Max+1</button>
                                     </div>
-                                    <h3 className="text-2xl font-black text-yellow-500 uppercase italic leading-none mb-4 gold-glow">{canRejoin ? "Bust Alert!" : "Locked Out"}</h3>
-                                    <p className="text-[11px] font-bold uppercase text-slate-400 px-2 leading-relaxed tracking-tight">
-                                        {getPlayerName(bustedOverlay.currentIdx)} passed 201. <br/>
-                                        {canRejoin ? `Re-buy handicap entry at ${bustedOverlay.target}?` : "Locked. Opponent at 180+ prohibits re-entry."}
-                                    </p>
+                                    <div className="space-y-2 mb-8 max-h-48 overflow-y-auto no-scrollbar">{players.map((p, i) => (<div key={i} className={`flex items-center justify-between p-4 rounded-2xl border ${isDarkMode ? 'bg-white/5 border-white/10' : 'bg-slate-50'}`}><span className="text-[10px] font-black uppercase">{p}</span><button onClick={() => { if(players.length > 2) setGame({...game, players: players.filter(pl => pl !== p), rounds: [], inactive: []}); }} className="text-red-500 p-2"><Icon name="user-minus" size={18}/></button></div>))}</div>
+                                    <button onClick={() => setUi({...ui, settings: false})} className="w-full py-5 bg-slate-950 text-white rounded-2xl font-black uppercase text-xs btn-active border border-white/5">Close</button>
                                 </div>
-                                <div className="grid grid-cols-2 gap-4">
-                                    <button onClick={() => handleBustChoice(true)} disabled={!canRejoin} className={`py-5 rounded-2xl text-[10px] font-black uppercase shadow-xl transition-all ${!canRejoin ? 'bg-slate-800 text-slate-600 opacity-20 cursor-not-allowed' : 'bg-emerald-600 text-white btn-active'}`}>Re-entry</button>
-                                    <button onClick={() => handleBustChoice(false)} className="bg-rose-700 py-5 rounded-2xl text-[10px] font-black uppercase text-white shadow-xl btn-active transition-all tracking-widest">Stay Out</button>
-                                </div>
-                            </div>
-                        </div>
-                    )}
+                            )}
 
-                    {/* Generic Confirmation Modal */}
-                    {confirmModal && (
-                        <div className="fixed inset-0 z-[120] flex items-center justify-center p-4 bg-black/95 backdrop-blur-xl animate-in fade-in">
-                            <div className="w-full max-w-xs rounded-[2rem] p-8 glass-panel border border-white/10 text-center shadow-2xl">
-                                <Icon name="alert-triangle" size={32} className="text-yellow-500 mb-4 mx-auto" />
-                                <p className="text-sm font-black uppercase text-slate-200 mb-8 leading-tight tracking-tight">{confirmModal.message}</p>
-                                <div className="flex gap-2">
-                                    <button onClick={confirmModal.onConfirm} className="flex-1 py-4 bg-yellow-600 text-black rounded-xl text-[10px] font-black uppercase btn-active transition-all">Proceed</button>
-                                    <button onClick={() => setConfirmModal(null)} className="flex-1 py-4 bg-slate-800 text-white rounded-xl text-[10px] font-black uppercase btn-active transition-all">Cancel</button>
+                            {/* History */}
+                            {ui.history && (
+                                <div className={`w-full max-w-md rounded-[2.5rem] p-8 shadow-2xl border ${isDarkMode ? 'bg-slate-900 border-white/10 text-white' : 'bg-white border-slate-200 text-slate-900'}`}>
+                                    <h3 className="text-xl font-black text-indigo-400 uppercase mb-6 flex items-center gap-3 tracking-tighter"><Icon name="history" /> History Log</h3>
+                                    <div className="space-y-4 max-h-[60vh] overflow-y-auto pr-1 no-scrollbar">
+                                        {sessionHistory.length === 0 ? <div className="py-20 text-center opacity-20 text-xs font-black uppercase italic tracking-widest">No Archives</div> : sessionHistory.map((log) => (<div key={log.id} className={`p-4 rounded-2xl border ${isDarkMode ? 'bg-black/20 border-white/5 shadow-inner' : 'bg-slate-100 border-slate-200'}`}><div className="flex justify-between mb-3 border-b border-white/5 pb-2 text-yellow-500 font-black tracking-widest"><span className="text-[10px]">{log.date}</span></div><div className="grid grid-cols-2 gap-2">{log.players.map((pName, pIdx) => (<div key={pIdx} className="flex items-center justify-between text-[10px] opacity-80 truncate"><span>{pName}</span><span className="font-bold">{log.finalScores[pIdx]}</span></div>))}</div></div>))}
+                                    </div>
+                                    <button onClick={() => setUi({...ui, history: false})} className="w-full mt-8 py-5 bg-slate-950 text-white rounded-2xl font-black uppercase text-xs btn-active border border-white/5">Back</button>
                                 </div>
-                            </div>
+                            )}
+
+                            {/* Bust Layer */}
+                            {ui.bust && (
+                                <div className={`w-full max-sm rounded-[2.5rem] p-8 shadow-2xl border ${isDarkMode ? 'bg-slate-900 text-white border-white/10' : 'bg-white border-slate-200 text-slate-900'}`}>
+                                    <div className="text-center mb-8"><Icon name="wind" size={40} className="mb-4 text-orange-500"/><h3 className="text-2xl font-black uppercase italic mb-4 tracking-tighter leading-none">Bust Alert!</h3><p className="text-xs font-bold uppercase opacity-60 px-4 leading-relaxed tracking-tighter">
+                                        {players[ui.bust.current]} passed 201. <br/>
+                                        {ui.bust.proj.some((t, i) => i !== ui.bust.current && !inactive.includes(i) && t >= 180) ? "The Door is Closed. Player at 180+ prohibits re-entry." : `Re-buy handicap entry at ${ui.bust.target}?`}
+                                    </p></div>
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <button onClick={() => solveBust(true)} disabled={ui.bust.proj.some((t, i) => i !== ui.bust.current && !inactive.includes(i) && t >= 180)} className={`py-5 rounded-2xl text-xs font-black uppercase shadow-xl transition-all ${ui.bust.proj.some((t, i) => i !== ui.bust.current && !inactive.includes(i) && t >= 180) ? 'bg-slate-800 text-slate-600 opacity-20' : 'bg-orange-600 text-white btn-active'}`}>Re-entry</button>
+                                        <button onClick={() => solveBust(false)} className="bg-rose-700 py-5 text-white rounded-2xl text-xs font-black uppercase btn-active shadow-xl tracking-widest">Stay Out</button>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Confirm Modal */}
+                            {ui.confirm && (
+                                <div className="w-full max-w-xs rounded-[2.5rem] p-8 bg-slate-900 border border-white/10 text-center shadow-2xl animate-in zoom-in-95">
+                                    <Icon name="alert-triangle" size={32} className="text-yellow-500 mb-4 mx-auto" />
+                                    <p className="text-sm font-black uppercase text-slate-200 mb-8 leading-tight tracking-tight">{ui.confirm.msg}</p>
+                                    <div className="flex gap-2"><button onClick={ui.confirm.fn} className="flex-1 py-4 bg-orange-600 text-white rounded-xl text-[10px] font-black uppercase btn-active">Yes</button><button onClick={() => setUi({...ui, confirm: null})} className="flex-1 py-4 bg-slate-800 text-white rounded-xl text-[10px] font-black uppercase btn-active">No</button></div>
+                                </div>
+                            )}
                         </div>
                     )}
                 </div>
