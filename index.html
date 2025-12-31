@@ -4,20 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=0, viewport-fit=cover">
     
-    <!-- Apple Web App & Standalone Configuration -->
+    <!-- App Meta & Standalone Support -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Poker 2026">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="theme-color" content="#020617">
     
-    <!-- App Icons (Festive Celebration) -->
+    <!-- Festive Icons -->
     <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 fill=%22%23020617%22/><text y=%22.9em%22 font-size=%2280%22 x=%2210%22>🎆</text></svg>">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎆</text></svg>">
 
     <title>Park View Pokers Club - Final 2026 Build</title>
     
-    <!-- Frameworks -->
+    <!-- Core Frameworks -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
@@ -25,7 +25,7 @@
     <script src="https://unpkg.com/lucide@latest"></script>
 
     <style>
-        /* CELEBRATION ANIMATIONS */
+        /* CELEBRATION & GAME ANIMATIONS */
         @keyframes confetti-fall {
             0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
             100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
@@ -35,10 +35,6 @@
             10% { opacity: 0.8; }
             90% { opacity: 0.8; }
             100% { transform: translateY(105vh) rotate(720deg) translateX(20px); opacity: 0; }
-        }
-        @keyframes firework-burst {
-            0%, 100% { transform: scale(1); opacity: 0.8; filter: blur(1px); }
-            50% { transform: scale(1.1); opacity: 1; filter: blur(0px); }
         }
         @keyframes spark-float {
             0% { transform: translateY(0) scale(1); opacity: 1; }
@@ -54,18 +50,22 @@
             50% { opacity: 1; }
             100% { transform: scale(5); opacity: 0; }
         }
-        @keyframes particle-drift {
+        @keyframes bit-drift {
             0% { transform: translate(0, 0); opacity: 1; }
             100% { transform: translate(var(--p-x), var(--p-y)); opacity: 0; }
+        }
+        @keyframes glow-pulse {
+            0%, 100% { transform: scale(1); opacity: 0.8; filter: blur(1px); }
+            50% { transform: scale(1.1); opacity: 1; filter: blur(0px); }
         }
 
         .animate-confetti { animation: confetti-fall linear infinite; }
         .animate-cards { animation: card-fall linear infinite; }
-        .animate-firework { animation: firework-burst 2s infinite ease-in-out; }
         .animate-spark { animation: spark-float 1.5s infinite linear; }
         .animate-rocket { animation: rocket-soar linear infinite; }
         .animate-pop { animation: explosion-pop ease-out infinite; }
-        .animate-bit { animation: particle-drift ease-out infinite; }
+        .animate-bit { animation: bit-drift ease-out infinite; }
+        .animate-glow { animation: glow-pulse 2s infinite ease-in-out; }
 
         ::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
@@ -114,76 +114,47 @@
             return <span ref={containerRef} className={`inline-flex items-center justify-center shrink-0 ${className}`} style={{ width: size, height: size }}></span>;
         };
 
-        const STORAGE_KEY = "pvp_club_master_2026_final";
+        const STORAGE_KEY = "pvp_master_v2026_deploy_final";
         const THEME_KEY = "pvp_theme_2026_mode";
         const DEFAULT_ROSTER = ['Player 1', 'Player 2', 'Player 3'];
 
-        // --- Countdown Component ---
-        const CountdownTimer = ({ isDarkMode }) => {
-            const [timeLeft, setTimeLeft] = useState({ h: 0, m: 0, s: 0, finished: false });
+        // --- Celebration Visual Components ---
 
-            useEffect(() => {
-                const target = new Date("2026-01-01T00:00:00").getTime();
-                const timer = setInterval(() => {
-                    const now = new Date().getTime();
-                    const diff = target - now;
-                    if (diff < 0) {
-                        setTimeLeft({ h: 0, m: 0, s: 0, finished: true });
-                        clearInterval(timer);
-                    } else {
-                        const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                        const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-                        const s = Math.floor((diff % (1000 * 60)) / 1000);
-                        setTimeLeft({ h, m, s, finished: false });
-                    }
-                }, 1000);
-                return () => clearInterval(timer);
-            }, []);
-
-            if (timeLeft.finished) {
-                return (
-                    <div className={`${isDarkMode ? 'bg-yellow-600/30 text-yellow-400 border-yellow-500/30' : 'bg-orange-500 text-white border-orange-400'} backdrop-blur-md px-10 py-2 rounded-full text-xs font-black uppercase tracking-[0.2em] mb-12 inline-block border shadow-2xl animate-pulse`}>
-                        Happy New Year 2026
-                    </div>
-                );
-            }
-
-            return (
-                <div className="flex flex-col items-center mb-10 relative z-20">
-                    <div className="text-[10px] font-black uppercase tracking-[0.3em] mb-2 opacity-50">Welcome 2026</div>
-                    <div className="flex gap-4">
-                        {[{ v: timeLeft.h, l: 'Hrs' }, { v: timeLeft.m, l: 'Min' }, { v: timeLeft.s, l: 'Sec' }].map((unit, i) => (
-                            <div key={i} className="flex flex-col items-center">
-                                <div className={`text-4xl font-black tabular-nums ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>{String(unit.v).padStart(2, '0')}</div>
-                                <div className="text-[8px] font-bold uppercase tracking-widest opacity-40">{unit.l}</div>
-                            </div>
-                        ))}
-                    </div>
+        const CountdownTimer = ({ isDarkMode }) => (
+            <div className="flex flex-col items-center mb-6 relative z-20">
+                <div className={`${isDarkMode ? 'bg-yellow-600/30 text-yellow-400 border-yellow-500/30' : 'bg-orange-500 text-white border-orange-400'} backdrop-blur-md px-10 py-2 rounded-full text-xs font-black uppercase tracking-[0.2em] inline-block border shadow-2xl animate-pulse`}>
+                    Happy New Year 2026
                 </div>
-            );
-        };
+            </div>
+        );
 
-        // --- Rocket Blast Effect ---
         const RocketBlasts = () => {
-            const rockets = useMemo(() => Array.from({ length: 4 }).map((_, i) => ({
-                id: i, left: 15 + i * 23, targetY: 12 + Math.random() * 25 + 'vh',
-                duration: 2.2 + Math.random() * 1.5, delay: Math.random() * 5
-            })), []);
+            const rockets = useMemo(() => {
+                const colors = ['#fde047', '#fb7185', '#34d399', '#38bdf8', '#a78bfa'];
+                return Array.from({ length: 4 }).map((_, i) => ({
+                    id: i, left: 15 + i * 23, targetY: 12 + Math.random() * 25 + 'vh',
+                    duration: 2.2 + Math.random() * 1.5, delay: Math.random() * 5,
+                    color: colors[i % colors.length]
+                }));
+            }, []);
 
             return (
                 <div className="fixed inset-0 pointer-events-none z-30">
                     {rockets.map(r => (
                         <div key={r.id} className="absolute inset-0">
-                            <div className="absolute animate-rocket bg-yellow-400 w-0.5 h-12 rounded-full blur-[1px]"
-                                 style={{ left: `${r.left}%`, '--target-y': r.targetY, animationDuration: `${r.duration}s`, animationDelay: `${r.delay}s` }}>
-                                <div className="absolute top-full left-1/2 -translate-x-1/2 w-4 h-16 bg-gradient-to-t from-transparent via-orange-500 to-yellow-300 opacity-50"></div>
+                            <div className="absolute animate-rocket w-0.5 h-12 rounded-full blur-[1px]"
+                                 style={{ left: `${r.left}%`, backgroundColor: r.color, '--target-y': r.targetY, animationDuration: `${r.duration}s`, animationDelay: `${r.delay}s`, boxShadow: `0 0 10px ${r.color}` }}>
+                                <div className="absolute top-full left-1/2 -translate-x-1/2 w-4 h-16 opacity-40"
+                                     style={{ background: `linear-gradient(to bottom, ${r.color}, transparent)` }}></div>
                             </div>
                             <div className="absolute" style={{ left: `${r.left}%`, top: r.targetY }}>
-                                <div className="absolute -translate-x-1/2 -translate-y-1/2 w-16 h-16 rounded-full bg-yellow-400 blur-xl animate-pop opacity-0"
-                                     style={{ animationDuration: `${r.duration}s`, animationDelay: `${r.delay + r.duration * 0.75}s` }}></div>
+                                <div className="absolute -translate-x-1/2 -translate-y-1/2 w-16 h-16 rounded-full blur-xl animate-pop opacity-0"
+                                     style={{ backgroundColor: r.color, animationDuration: `${r.duration}s`, animationDelay: `${r.delay + r.duration * 0.75}s` }}></div>
                                 {[...Array(12)].map((_, pi) => (
-                                    <div key={pi} className="absolute w-1.5 h-1.5 rounded-full bg-orange-400 animate-bit opacity-0"
+                                    <div key={pi} className="absolute w-1.5 h-1.5 rounded-full animate-bit opacity-0"
                                          style={{ 
+                                            backgroundColor: r.color,
+                                            boxShadow: `0 0 8px ${r.color}`,
                                             '--p-x': `${(Math.random() - 0.5) * 220}px`, 
                                             '--p-y': `${(Math.random() - 0.5) * 220}px`, 
                                             animationDuration: `${r.duration}s`, 
@@ -197,7 +168,6 @@
             );
         };
 
-        // --- Persistent Card Symbols Rain ---
         const CardRain = ({ isDarkMode }) => {
             const symbols = useMemo(() => {
                 const icons = ['spade', 'heart', 'diamond', 'club'];
@@ -227,21 +197,7 @@
             );
         };
 
-        const FireworksDisplay = ({ isDarkMode }) => (
-            <div className="relative w-64 h-64 mx-auto mb-6 flex items-center justify-center">
-                <div className={`absolute inset-0 rounded-full blur-[60px] opacity-20 ${isDarkMode ? 'bg-yellow-500' : 'bg-orange-500'}`}></div>
-                <div className="relative z-20 flex flex-col items-center animate-firework">
-                    <div className={`text-7xl font-black italic tracking-tighter ${isDarkMode ? 'text-yellow-400 gold-glow' : 'text-orange-600'} drop-shadow-2xl`}>2026</div>
-                    <div className={`text-[10px] font-black uppercase tracking-[0.4em] mt-[-8px] ${isDarkMode ? 'text-white/60' : 'text-slate-500'}`}>Official Club</div>
-                </div>
-                {[...Array(12)].map((_, i) => (
-                    <div key={i} className={`absolute w-1 h-1 rounded-full animate-spark ${isDarkMode ? 'bg-yellow-300' : 'bg-orange-400'}`}
-                         style={{ left: `${20 + Math.random() * 60}%`, top: `${40 + Math.random() * 40}%`, animationDelay: `${Math.random() * 2}s` }}></div>
-                ))}
-            </div>
-        );
-
-        const ConfettiSky = ({ isDarkMode }) => {
+        const CelebrationSky = ({ isDarkMode }) => {
             const items = useMemo(() => {
                 const colors = isDarkMode ? ['#fde047', '#ffffff', '#ca8a04'] : ['#f87171', '#60a5fa', '#34d399'];
                 return Array.from({ length: 30 }).map((_, i) => ({
@@ -257,6 +213,22 @@
                 </div>
             );
         };
+
+        const FireworksDisplay = ({ isDarkMode }) => (
+            <div className="relative w-64 h-64 mx-auto mb-6 flex items-center justify-center overflow-hidden">
+                <div className={`absolute inset-0 rounded-full blur-[60px] opacity-20 ${isDarkMode ? 'bg-yellow-500' : 'bg-orange-500'}`}></div>
+                <div className="relative z-20 flex flex-col items-center animate-glow">
+                    <div className={`text-7xl font-black italic tracking-tighter ${isDarkMode ? 'text-yellow-400 gold-glow' : 'text-orange-600'} drop-shadow-2xl`}>2026</div>
+                    <div className={`text-[10px] font-black uppercase tracking-[0.4em] mt-[-8px] ${isDarkMode ? 'text-white/60' : 'text-slate-500'}`}>Club Official</div>
+                </div>
+                {[...Array(12)].map((_, i) => (
+                    <div key={i} className={`absolute w-1 h-1 rounded-full animate-spark ${isDarkMode ? 'bg-yellow-300' : 'bg-orange-400'}`}
+                         style={{ left: `${20 + Math.random() * 60}%`, top: `${40 + Math.random() * 40}%`, animationDelay: `${Math.random() * 2}s` }}></div>
+                ))}
+            </div>
+        );
+
+        // --- Main App Logic ---
 
         const App = () => {
             const [showWelcome, setShowWelcome] = useState(true);
@@ -292,7 +264,14 @@
                 document.body.style.backgroundColor = isDarkMode ? "#020617" : "#f1f5f9";
             }, [game, isDarkMode]);
 
-            const submitScores = (isEditing = false) => {
+            useEffect(() => {
+                if (!showWelcome && scrollRef.current && game.rounds.length > 0) {
+                    scrollRef.current.scrollTo({ top: scrollRef.current.scrollHeight, behavior: 'smooth' });
+                }
+            }, [game.rounds, showWelcome]);
+
+            const commitScores = (isEditing = false) => {
+                setForm(f => ({ ...f, error: null }));
                 const entry = players.map((p, i) => inactive.includes(i) ? 0 : parseInt(form.scores[p] || 0));
                 if (entry.filter((s, i) => !inactive.includes(i) && s === 0).length !== 1) {
                     setForm(f => ({ ...f, error: "Missing score or multiple winners (0)." })); return;
@@ -341,11 +320,27 @@
                 setForm(f => ({ ...f, name: '' }));
             };
 
+            const savePlayerNameEdit = (idx) => {
+                if (!form.editVal.trim()) return;
+                const updatedPlayers = [...players];
+                updatedPlayers[idx] = form.editVal.trim();
+                setGame(prev => ({ ...prev, players: updatedPlayers }));
+                setForm(f => ({ ...f, editIdx: null, editVal: '' }));
+            };
+
+            const startNewMatch = () => {
+                setUi(u => ({ ...u, confirm: { msg: "Archive and reset all scores to 0?", fn: () => {
+                    const summary = { id: Date.now(), date: new Date().toLocaleString(), players: [...players], finalScores: [...totals] };
+                    setGame(prev => ({ ...prev, rounds: [], inactive: [], reEntries: new Array(prev.players.length).fill(0), history: [summary, ...(prev.history || [])].slice(0, 5) }));
+                    setUi(prevUi => ({ ...prevUi, confirm: null }));
+                }}}));
+            };
+
             if (showWelcome) {
                 return (
                     <div className={`fixed inset-0 flex flex-col items-center justify-center p-8 transition-colors duration-500 overflow-hidden ${isDarkMode ? 'bg-[#020617] text-white' : 'bg-slate-50 text-slate-900'}`}>
-                        {isDarkMode && <div className="absolute inset-0 z-0"><img src="image.png" alt="" className="w-full h-full object-cover opacity-50" onError={(e) => e.target.style.display = 'none'} /><div className="absolute inset-0 bg-gradient-to-t from-[#020617] via-[#020617]/70 to-transparent"></div></div>}
-                        <ConfettiSky isDarkMode={isDarkMode} />
+                        {isDarkMode && <div className="absolute inset-0 z-0"><img src="image.png" alt="" className="w-full h-full object-cover opacity-40" onError={(e) => e.target.style.display = 'none'} /><div className="absolute inset-0 bg-gradient-to-t from-[#020617] via-[#020617]/70 to-transparent"></div></div>}
+                        <CelebrationSky isDarkMode={isDarkMode} />
                         <CardRain isDarkMode={isDarkMode} />
                         <RocketBlasts />
                         <div className="max-w-sm w-full text-center relative z-10">
@@ -354,8 +349,8 @@
                             <h1 className={`text-3xl font-black uppercase italic mb-1 ${isDarkMode ? 'text-yellow-500' : 'text-orange-600'}`}>Park View Pokers</h1>
                             <h2 className={`text-5xl font-black uppercase tracking-widest mb-12 ${isDarkMode ? 'text-slate-300' : 'text-slate-500'}`}>Club</h2>
                             <div className="flex gap-2">
-                                <button onClick={() => setShowWelcome(false)} className={`flex-1 h-16 rounded-3xl font-black uppercase tracking-widest shadow-2xl transition-all btn-active ${isDarkMode ? 'bg-orange-600' : 'bg-orange-500 text-white'}`}>Open Match</button>
-                                <button onClick={() => setIsDarkMode(!isDarkMode)} className={`w-16 h-16 rounded-3xl flex items-center justify-center shadow-2xl btn-active ${isDarkMode ? 'bg-slate-800 text-yellow-400' : 'bg-white border'}`}><Icon name={isDarkMode ? "sun" : "moon"} /></button>
+                                <button onClick={() => setShowWelcome(false)} className={`flex-1 h-16 rounded-3xl font-black uppercase tracking-widest shadow-2xl transition-all btn-active ${isDarkMode ? 'bg-orange-600' : 'bg-orange-500 text-white'}`}>Open Table</button>
+                                <button onClick={() => setIsDarkMode(!isDarkMode)} className={`w-16 h-16 rounded-3xl flex items-center justify-center shadow-2xl btn-active ${isDarkMode ? 'bg-slate-800 text-yellow-400' : 'bg-white border border-slate-200'}`}><Icon name={isDarkMode ? "sun" : "moon"} /></button>
                             </div>
                         </div>
                     </div>
@@ -364,16 +359,17 @@
 
             return (
                 <div className={`fixed inset-0 flex flex-col transition-colors duration-500 overflow-hidden ${isDarkMode ? 'bg-[#020617] text-slate-100' : 'bg-slate-50 text-slate-900'}`}>
-                    <ConfettiSky isDarkMode={isDarkMode} />
+                    <CelebrationSky isDarkMode={isDarkMode} />
                     <CardRain isDarkMode={isDarkMode} />
                     
                     <nav className={`flex-none px-4 py-4 z-40 pt-safe border-b backdrop-blur-xl ${isDarkMode ? 'bg-slate-900/70 border-white/10' : 'bg-white/90 border-slate-200'}`}>
                         <div className="max-w-4xl mx-auto flex items-center justify-between">
                             <div className="flex items-center gap-2">
                                 <button onClick={() => setShowWelcome(true)} className={`w-10 h-10 rounded-2xl flex items-center justify-center text-white shadow-lg btn-active ${isDarkMode ? 'bg-orange-500' : 'bg-orange-600'}`}><Icon name="home" /></button>
-                                <div className="text-left leading-none"><h1 className={`text-[11px] font-black uppercase tracking-tight ${isDarkMode ? 'text-yellow-400' : 'text-orange-600'}`}>PV Pokers</h1><span className="text-[9px] font-bold uppercase opacity-80">2026 Session</span></div>
+                                <div className="text-left leading-none"><h1 className={`text-[11px] font-black uppercase tracking-tight ${isDarkMode ? 'text-yellow-400' : 'text-orange-600'}`}>PV Pokers</h1><span className="text-[9px] font-bold uppercase opacity-80 text-orange-200">2026 Season</span></div>
                             </div>
                             <div className="flex items-center gap-1">
+                                <button onClick={startNewMatch} className="p-2 opacity-70 hover:opacity-100 text-white btn-active" title="Reset Score"><Icon name="rotate-ccw" /></button>
                                 <button onClick={() => setIsDarkMode(!isDarkMode)} className="p-2 opacity-70 btn-active transition-colors"><Icon name={isDarkMode ? "sun" : "moon"} /></button>
                                 <button onClick={() => setUi({...ui, history: true})} className="p-2 opacity-70 btn-active transition-colors"><Icon name="history" /></button>
                                 <button onClick={() => setUi({...ui, settings: true})} className="p-2 opacity-70 btn-active transition-colors"><Icon name="settings-2" /></button>
@@ -382,12 +378,15 @@
                     </nav>
 
                     <div className="flex-1 flex flex-col overflow-hidden relative">
-                        <div className={`flex-none flex border-b-2 z-20 ${isDarkMode ? 'bg-slate-950 border-white/10 shadow-lg' : 'bg-slate-100'}`}>
+                        <div className={`flex-none flex border-b-2 z-20 ${isDarkMode ? 'bg-slate-950 border-white/10 shadow-lg' : 'bg-slate-100 shadow-sm'}`}>
                             <div className="w-10 text-[8px] font-black flex items-center justify-center italic text-slate-500">Hand</div>
                             <div className="flex-1 flex">
                                 {players.map((p, i) => (
                                     <div key={i} className={`flex-1 border-r last:border-r-0 py-3 text-center truncate ${inactive.includes(i) ? 'opacity-30 grayscale bg-black/5' : ''}`}>
-                                        <div className="flex flex-col items-center justify-center px-0.5"><span className={`text-[10px] font-black uppercase truncate block w-full tracking-tight ${isDarkMode ? 'text-orange-400' : 'text-orange-700'}`}>{p}</span>{reEntries[i] > 0 && <span className="bg-indigo-600 text-white text-[6px] px-1 rounded-sm leading-none py-1">R{reEntries[i]}</span>}</div>
+                                        <div className="flex flex-col items-center justify-center px-0.5 min-w-0">
+                                            <span className={`text-[10px] font-black uppercase truncate block w-full tracking-tight ${isDarkMode ? 'text-orange-400' : 'text-orange-700'}`}>{p}</span>
+                                            {reEntries[i] > 0 && <span className="bg-indigo-600 text-white text-[6px] px-1 rounded-sm leading-none py-1">R{reEntries[i]}</span>}
+                                        </div>
                                     </div>
                                 ))}
                             </div>
@@ -404,8 +403,8 @@
                             <div className="w-10 flex items-center justify-center text-[8px] font-black italic bg-black/20 text-slate-500 uppercase">Total</div>
                             <div className="flex-1 flex">
                                 {totals.map((total, i) => (
-                                    <div key={i} className={`flex-1 py-4 border-r last:border-r-0 border-white/5 text-center font-black text-lg ${inactive.includes(i) ? 'opacity-50 line-through' : ''}`}>
-                                        <span className="flex items-center justify-center gap-1">{total} {i === leaderIdx && !inactive.includes(i) && rounds.length > 0 && <Icon name="crown" size={14} className="text-yellow-400" />}</span>
+                                    <div key={i} className={`flex-1 py-4 border-r last:border-r-0 border-white/5 text-center font-black text-lg min-w-0 ${inactive.includes(i) ? 'opacity-50 line-through' : ''}`}>
+                                        <span className="flex items-center justify-center gap-1">{total} {i === leaderIdx && !inactive.includes(i) && rounds.length > 0 && <Icon name="crown" size={14} className="text-yellow-400 animate-bounce" />}</span>
                                     </div>
                                 ))}
                             </div>
@@ -414,42 +413,65 @@
 
                     <div className={`p-5 pb-safe flex-none border-t ${isDarkMode ? 'bg-slate-900/95 border-white/10' : 'bg-white border-slate-200'}`}>
                         {matchOver ? (
-                            <div className="text-center p-2 animate-in zoom-in-95 duration-700"><h4 className="text-xl font-black italic text-orange-500 uppercase mb-3 drop-shadow-xl">2026 Celebration!</h4><button onClick={() => setUi({...ui, confirm: { msg: "Start fresh?", fn: () => { setGame(g => ({ ...g, rounds: [], inactive: [], reEntries: new Array(g.players.length).fill(0) })); setUi({...ui, confirm: null}); } }})} className="px-10 py-4 bg-orange-600 text-white rounded-full text-xs font-black uppercase active:scale-95 transition-all shadow-xl">New Match</button></div>
+                            <div className="text-center p-2 animate-in zoom-in-95 duration-500"><h4 className="text-xl font-black italic text-orange-500 uppercase mb-3 drop-shadow-xl">Winner Found!</h4><button onClick={startNewMatch} className="px-10 py-4 bg-orange-600 text-white rounded-full text-xs font-black uppercase active:scale-95 transition-all shadow-xl">New Match</button></div>
                         ) : (
                             <div className="flex gap-2 max-w-lg mx-auto">
-                                <button onClick={() => setUi({...ui, add: true})} className="flex-1 h-16 bg-orange-600 text-white rounded-3xl font-black uppercase tracking-widest shadow-xl flex items-center justify-center gap-3 btn-active transition-all"><Icon name="plus" size={24} /> Record Score</button>
+                                <button onClick={() => setUi({...ui, add: true})} className="flex-1 h-16 bg-orange-600 text-white rounded-3xl font-black uppercase tracking-widest shadow-xl flex items-center justify-center gap-3 btn-active transition-all"><Icon name="plus" size={24} /> Record Hand</button>
+                                <button onClick={() => {
+                                    const text = `🪁 PV Pokers 2026 🪁\n\n` + players.map((p, i) => `${p}: ${totals[i]}${reEntries[i] > 0 ? ` (R${reEntries[i]})` : ''}${inactive.includes(i) ? ' (Out)' : ''}`).join('\n');
+                                    if(navigator.share) navigator.share({text}); else { const el = document.createElement('textarea'); el.value = text; document.body.appendChild(el); el.select(); document.execCommand('copy'); document.body.removeChild(el); setUi(u=>({...u, confirm: {msg: "Scores copied!", fn: () => setUi(us=>({...us, confirm: null})) } })); }
+                                }} className={`px-6 h-16 rounded-2xl font-black shadow-xl flex items-center justify-center btn-active transition-all ${isDarkMode ? 'bg-indigo-600 text-white' : 'bg-slate-800 text-white'}`}>
+                                    <Icon name="share-2" size={24} />
+                                </button>
                             </div>
                         )}
                     </div>
 
-                    {/* MODAL SYSTEM */}
+                    {/* OVERLAYS SYSTEM */}
                     {(ui.add || ui.editIdx !== null || ui.settings || ui.history || ui.bust || ui.confirm) && (
                         <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-black/90 backdrop-blur-sm animate-in fade-in">
-                            {/* Score Entry */}
+                            
                             {(ui.add || ui.editIdx !== null) && (
                                 <div className={`w-full max-w-md rounded-[2.5rem] p-8 shadow-2xl border animate-in slide-in-from-bottom-10 ${isDarkMode ? 'bg-slate-900 border-white/10 text-white' : 'bg-white border-slate-200 text-slate-900'}`}>
-                                    <div className="flex justify-between items-center mb-6"><h3 className="text-xl font-black text-orange-500 uppercase italic tracking-tight">{ui.editIdx !== null ? "Edit Scores" : "Record Hand"}</h3><button onClick={() => setUi({...ui, add: false, editIdx: null})} className="text-slate-500 p-2"><Icon name="x" size={28} /></button></div>
+                                    <div className="flex justify-between items-center mb-6"><h3 className="text-xl font-black text-orange-500 uppercase italic tracking-tight">{ui.editIdx !== null ? "Edit Hand" : "Hand Result"}</h3><button onClick={() => setUi({...ui, add: false, editIdx: null})} className="text-slate-500 p-2"><Icon name="x" size={28} /></button></div>
                                     {form.error && <div className="mb-4 bg-red-500/10 p-3 rounded-xl text-[10px] font-black text-red-500 uppercase animate-bounce">{form.error}</div>}
-                                    <div className="grid grid-cols-2 gap-4 mb-8 max-h-[40vh] overflow-y-auto no-scrollbar">{players.map((p, idx) => !inactive.includes(idx) && (<div key={idx} className="flex flex-col gap-2"><label className="text-[10px] font-black uppercase text-slate-500 truncate tracking-tighter">{p}</label><input type="number" inputMode="numeric" value={form.scores[p] || ''} onChange={e => setForm({...form, scores: {...form.scores, [p]: e.target.value}})} className={`w-full p-5 rounded-2xl text-center text-3xl font-black outline-none border ${isDarkMode ? 'bg-slate-950/50 border-white/5 text-orange-500' : 'bg-slate-50 border-slate-200'}`} placeholder="0" /></div>))}</div>
-                                    <button onClick={() => submitScores(ui.editIdx !== null)} className="w-full bg-orange-600 py-6 rounded-3xl font-black uppercase shadow-xl text-white tracking-widest text-xs btn-active">Confirm Hand</button>
+                                    <div className="grid grid-cols-2 gap-4 mb-8 max-h-[40vh] overflow-y-auto no-scrollbar pr-1">{players.map((p, idx) => !inactive.includes(idx) && (<div key={idx} className="flex flex-col gap-2"><label className="text-[10px] font-black uppercase text-slate-500 truncate tracking-tighter">{p}</label><input type="number" inputMode="numeric" value={form.scores[p] || ''} onChange={e => setForm({...form, scores: {...form.scores, [p]: e.target.value}})} className={`w-full p-5 rounded-2xl text-center text-3xl font-black outline-none border ${isDarkMode ? 'bg-slate-950/50 border-white/5 text-orange-500' : 'bg-slate-50 border-slate-200'}`} placeholder="0" /></div>))}</div>
+                                    <button onClick={() => commitScores(ui.editIdx !== null)} className="w-full bg-orange-600 py-6 rounded-3xl font-black uppercase shadow-xl text-white tracking-widest text-xs btn-active">Confirm Hand</button>
                                 </div>
                             )}
 
-                            {/* Registry */}
                             {ui.settings && (
                                 <div className={`w-full max-sm rounded-[2.5rem] p-8 shadow-2xl border ${isDarkMode ? 'bg-slate-900 border-white/10 text-white' : 'bg-white border-slate-200 text-slate-900'}`}>
-                                    <h3 className="text-xl font-black text-orange-500 uppercase mb-8 flex items-center gap-3 tracking-tighter"><Icon name="users" /> Registry</h3>
+                                    <h3 className="text-xl font-black text-orange-500 uppercase mb-8 flex items-center gap-3 tracking-tighter"><Icon name="users" /> 2026 Registry</h3>
                                     <input type="text" value={form.name} onChange={e => setForm({...form, name: e.target.value})} placeholder="New Player Name" className={`w-full p-5 rounded-2xl mb-4 font-bold outline-none border ${isDarkMode ? 'bg-slate-950 border-white/5 text-indigo-400' : 'bg-slate-50 border-slate-200 text-slate-900'}`} />
                                     <div className="grid grid-cols-2 gap-2 mb-8">
-                                        <button onClick={() => { if(form.name) { setGame(g=>({...g, players: [...g.players, form.name.trim()], rounds: [], inactive: [], reEntries: new Array(g.players.length+1).fill(0)})); setForm(f=>({...f, name:''})); setUi(u=>({...u, settings: false})); }}} className={`py-4 rounded-2xl text-[10px] font-black uppercase border btn-active ${isDarkMode ? 'bg-slate-800' : 'bg-slate-100'}`}>Full Reset</button>
+                                        <button onClick={() => { if(form.name) { setGame(g=>({...g, players: [...g.players, form.name.trim()], rounds: [], inactive: [], reEntries: new Array(g.players.length+1).fill(0)})); setForm(f=>({...f, name:''})); setUi(u=>({...u, settings: false})); }}} className={`py-4 rounded-2xl text-[10px] font-black uppercase border btn-active ${isDarkMode ? 'bg-slate-800' : 'bg-slate-100 shadow-sm'}`}>Reset Table</button>
                                         <button onClick={midGameJoin} className="py-4 bg-orange-600 text-white rounded-2xl text-[10px] font-black uppercase shadow-lg btn-active">Join @ Max+1</button>
                                     </div>
-                                    <div className="space-y-2 mb-8 max-h-48 overflow-y-auto no-scrollbar">{players.map((p, i) => (<div key={i} className={`flex items-center justify-between p-4 rounded-2xl border ${isDarkMode ? 'bg-white/5 border-white/10' : 'bg-slate-50'}`}><span className="text-[10px] font-black uppercase">{p}</span><button onClick={() => { if(players.length > 2) setGame({...game, players: players.filter(pl => pl !== p), rounds: [], inactive: []}); }} className="text-red-500 p-2"><Icon name="user-minus" size={18}/></button></div>))}</div>
-                                    <button onClick={() => setUi({...ui, settings: false})} className="w-full py-5 bg-slate-950 text-white rounded-2xl font-black uppercase text-xs btn-active border border-white/5">Close</button>
+                                    <div className="space-y-2 mb-8 max-h-48 overflow-y-auto no-scrollbar">
+                                        {players.map((p, i) => (
+                                            <div key={i} className={`flex items-center justify-between p-4 rounded-2xl border ${isDarkMode ? 'bg-white/5 border-white/10' : 'bg-slate-50 border-slate-200'}`}>
+                                                {form.editIdx === i ? (
+                                                    <div className="flex-1 flex gap-2 min-w-0">
+                                                        <input type="text" value={form.editVal} onChange={e => setForm({...form, editVal: e.target.value})} className="flex-1 bg-black/40 px-3 py-1 rounded text-[10px] font-black uppercase outline-none text-yellow-500 min-w-0" autoFocus />
+                                                        <button onClick={() => savePlayerNameEdit(i)} className="text-yellow-500 shrink-0"><Icon name="check-circle-2" /></button>
+                                                    </div>
+                                                ) : (
+                                                    <>
+                                                        <span className="text-[10px] font-black uppercase truncate max-w-[120px]">{p}</span>
+                                                        <div className="flex gap-1 shrink-0">
+                                                            <button onClick={() => setForm({...form, editIdx: i, editVal: p})} className="p-2 opacity-50"><Icon name="pencil" size={16}/></button>
+                                                            <button onClick={() => { if(players.length > 2) setGame({...game, players: players.filter(pl => pl !== p), rounds: [], inactive: []}); }} className="text-red-500 p-2"><Icon name="user-minus" size={18}/></button>
+                                                        </div>
+                                                    </>
+                                                )}
+                                            </div>
+                                        ))}
+                                    </div>
+                                    <button onClick={() => setUi({...ui, settings: false})} className="w-full py-5 bg-slate-950 text-white rounded-2xl font-black uppercase text-xs btn-active border border-white/5">Close Registry</button>
                                 </div>
                             )}
 
-                            {/* History */}
                             {ui.history && (
                                 <div className={`w-full max-w-md rounded-[2.5rem] p-8 shadow-2xl border ${isDarkMode ? 'bg-slate-900 border-white/10 text-white' : 'bg-white border-slate-200 text-slate-900'}`}>
                                     <h3 className="text-xl font-black text-indigo-400 uppercase mb-6 flex items-center gap-3 tracking-tighter"><Icon name="history" /> History Log</h3>
@@ -460,7 +482,6 @@
                                 </div>
                             )}
 
-                            {/* Bust Layer */}
                             {ui.bust && (
                                 <div className={`w-full max-sm rounded-[2.5rem] p-8 shadow-2xl border ${isDarkMode ? 'bg-slate-900 text-white border-white/10' : 'bg-white border-slate-200 text-slate-900'}`}>
                                     <div className="text-center mb-8"><Icon name="wind" size={40} className="mb-4 text-orange-500"/><h3 className="text-2xl font-black uppercase italic mb-4 tracking-tighter leading-none">Bust Alert!</h3><p className="text-xs font-bold uppercase opacity-60 px-4 leading-relaxed tracking-tighter">
@@ -474,7 +495,6 @@
                                 </div>
                             )}
 
-                            {/* Confirm Modal */}
                             {ui.confirm && (
                                 <div className="w-full max-w-xs rounded-[2.5rem] p-8 bg-slate-900 border border-white/10 text-center shadow-2xl animate-in zoom-in-95">
                                     <Icon name="alert-triangle" size={32} className="text-yellow-500 mb-4 mx-auto" />
