@@ -11,11 +11,11 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="theme-color" content="#020617">
     
-    <!-- Festive Icons -->
-    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 fill=%22%23020617%22/><text y=%22.9em%22 font-size=%2280%22 x=%2210%22>🎆</text></svg>">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎆</text></svg>">
+    <!-- Festival Icons -->
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 fill=%22%23020617%22/><text y=%22.9em%22 font-size=%2280%22 x=%2210%22>🪁</text></svg>">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🪁</text></svg>">
 
-    <title>Park View Pokers Club - Final 2026 Build</title>
+    <title>Park View Pokers Club - Sankranthi 2026</title>
     
     <!-- Core Frameworks -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -25,47 +25,35 @@
     <script src="https://unpkg.com/lucide@latest"></script>
 
     <style>
-        /* CELEBRATION & GAME ANIMATIONS */
-        @keyframes confetti-fall {
-            0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
-            100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
-        }
+        /* SANKRANTHI ANIMATIONS */
         @keyframes card-fall {
             0% { transform: translateY(-15vh) rotate(0deg) translateX(0); opacity: 0; }
-            10% { opacity: 0.8; }
-            90% { opacity: 0.8; }
+            10% { opacity: 0.6; }
+            90% { opacity: 0.6; }
             100% { transform: translateY(105vh) rotate(720deg) translateX(20px); opacity: 0; }
         }
-        @keyframes spark-float {
-            0% { transform: translateY(0) scale(1); opacity: 1; }
-            100% { transform: translateY(-100px) scale(0); opacity: 0; }
+        @keyframes kite-soar {
+            0% { transform: translate(-10vw, 110vh) rotate(-10deg); }
+            100% { transform: translate(110vw, -20vh) rotate(20deg); }
         }
-        @keyframes rocket-soar {
-            0% { transform: translateY(100vh) scale(1.2); opacity: 1; }
-            75% { opacity: 1; }
-            100% { transform: translateY(var(--target-y)) scale(0.5); opacity: 0; }
+        @keyframes flame-waver {
+            0%, 100% { transform: scale(1, 1) rotate(-1deg); opacity: 0.9; }
+            50% { transform: scale(1.08, 1.15) rotate(1deg); opacity: 1; }
         }
-        @keyframes explosion-pop {
-            0% { transform: scale(0); opacity: 1; }
-            50% { opacity: 1; }
-            100% { transform: scale(5); opacity: 0; }
+        @keyframes muggu-glow {
+            0%, 100% { opacity: 0.15; transform: scale(1) rotate(0deg); }
+            50% { opacity: 0.25; transform: scale(1.05) rotate(5deg); }
         }
-        @keyframes bit-drift {
-            0% { transform: translate(0, 0); opacity: 1; }
-            100% { transform: translate(var(--p-x), var(--p-y)); opacity: 0; }
-        }
-        @keyframes glow-pulse {
-            0%, 100% { transform: scale(1); opacity: 0.8; filter: blur(1px); }
-            50% { transform: scale(1.1); opacity: 1; filter: blur(0px); }
+        @keyframes ember-float {
+            0% { transform: translateY(0) scale(1) translateX(0); opacity: 1; }
+            100% { transform: translateY(-200px) scale(0) translateX(30px); opacity: 0; }
         }
 
-        .animate-confetti { animation: confetti-fall linear infinite; }
-        .animate-cards { animation: card-fall linear infinite; }
-        .animate-spark { animation: spark-float 1.5s infinite linear; }
-        .animate-rocket { animation: rocket-soar linear infinite; }
-        .animate-pop { animation: explosion-pop ease-out infinite; }
-        .animate-bit { animation: bit-drift ease-out infinite; }
-        .animate-glow { animation: glow-pulse 2s infinite ease-in-out; }
+        .animate-cards { animation: card-fall 10s linear infinite; }
+        .animate-kite { animation: kite-soar 20s linear infinite; }
+        .animate-flame { animation: flame-waver 0.4s infinite ease-in-out; transform-origin: bottom center; }
+        .animate-muggu { animation: muggu-glow 10s ease-in-out infinite; }
+        .animate-ember { animation: ember-float 2.5s infinite linear; }
 
         ::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
@@ -92,8 +80,12 @@
         .pt-safe { padding-top: env(safe-area-inset-top); }
         .pb-safe { padding-bottom: env(safe-area-inset-bottom); }
 
-        .gold-glow {
-            text-shadow: 0 0 15px rgba(253, 224, 71, 0.6);
+        .saffron-glow {
+            text-shadow: 0 0 15px rgba(249, 115, 22, 0.6);
+        }
+
+        .flame-path {
+            clip-path: polygon(50% 0%, 85% 35%, 100% 70%, 80% 100%, 20% 100%, 0% 70%, 15% 35%);
         }
     </style>
 </head>
@@ -114,29 +106,30 @@
             return <span ref={containerRef} className={`inline-flex items-center justify-center shrink-0 ${className}`} style={{ width: size, height: size }}></span>;
         };
 
-        const STORAGE_KEY = "pvp_master_2026_final_v173";
-        const THEME_KEY = "pvp_theme_2026_pref";
+        const STORAGE_KEY = "pvp_master_sankranthi_final_v1.2";
+        const THEME_KEY = "pvp_theme_2026_mode";
         const DEFAULT_ROSTER = ['Player 1', 'Player 2', 'Player 3'];
 
-        // --- Celebration Visual Components ---
+        // --- Visual Components ---
 
         const CountdownTimer = ({ isDarkMode }) => {
-            const [timeLeft, setTimeLeft] = useState({ h: 0, m: 0, s: 0, finished: false });
+            const [timeLeft, setTimeLeft] = useState({ d: 0, h: 0, m: 0, s: 0, finished: false });
 
             useEffect(() => {
-                const targetDate = new Date("2026-01-01T00:00:00").getTime();
+                const targetDate = new Date("2026-01-14T00:00:00").getTime();
                 const timer = setInterval(() => {
                     const now = new Date().getTime();
                     const diff = targetDate - now;
 
                     if (diff <= 0) {
-                        setTimeLeft({ h: 0, m: 0, s: 0, finished: true });
+                        setTimeLeft({ d: 0, h: 0, m: 0, s: 0, finished: true });
                         clearInterval(timer);
                     } else {
-                        const h = Math.floor(diff / (1000 * 60 * 60));
+                        const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+                        const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
                         const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
                         const s = Math.floor((diff % (1000 * 60)) / 1000);
-                        setTimeLeft({ h, m, s, finished: false });
+                        setTimeLeft({ d, h, m, s, finished: false });
                     }
                 }, 1000);
                 return () => clearInterval(timer);
@@ -144,25 +137,24 @@
 
             if (timeLeft.finished) {
                 return (
-                    <div className="flex flex-col items-center mb-6 relative z-20">
-                        <div className={`${isDarkMode ? 'bg-yellow-600/30 text-yellow-400 border-yellow-500/30' : 'bg-orange-500 text-white border-orange-400'} backdrop-blur-md px-10 py-2 rounded-full text-xs font-black uppercase tracking-[0.2em] inline-block border shadow-2xl animate-pulse`}>
-                            Happy New Year 2026
-                        </div>
+                    <div className={`${isDarkMode ? 'bg-orange-600/30 text-orange-400' : 'bg-orange-500 text-white'} backdrop-blur-md px-10 py-2 rounded-full text-xs font-black uppercase tracking-[0.2em] inline-block border border-orange-500/30 shadow-2xl animate-pulse`}>
+                        Happy Sankranthi 2026
                     </div>
                 );
             }
 
             return (
-                <div className="flex flex-col items-center mb-10 relative z-20">
-                    <div className="text-[10px] font-black uppercase tracking-[0.3em] mb-3 opacity-50">Counting Down to 2026</div>
+                <div className="flex flex-col items-center mb-6 relative z-20">
+                    <div className="text-[10px] font-black uppercase tracking-[0.3em] mb-3 opacity-50">Sankranthi Countdown</div>
                     <div className="flex gap-4">
                         {[
+                            { label: 'Days', value: timeLeft.d },
                             { label: 'Hrs', value: timeLeft.h },
                             { label: 'Min', value: timeLeft.m },
                             { label: 'Sec', value: timeLeft.s }
                         ].map((unit, i) => (
                             <div key={i} className="flex flex-col items-center">
-                                <div className={`text-4xl font-black tabular-nums tracking-tighter ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
+                                <div className={`text-3xl font-black tabular-nums tracking-tighter ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
                                     {String(unit.value).padStart(2, '0')}
                                 </div>
                                 <div className="text-[8px] font-bold uppercase tracking-widest opacity-40">{unit.label}</div>
@@ -173,40 +165,29 @@
             );
         };
 
-        const RocketBlasts = () => {
-            const rockets = useMemo(() => {
-                const colors = ['#fde047', '#fb7185', '#34d399', '#38bdf8', '#a78bfa'];
-                return Array.from({ length: 4 }).map((_, i) => ({
-                    id: i, left: 15 + i * 23, targetY: 12 + Math.random() * 25 + 'vh',
-                    duration: 2.2 + Math.random() * 1.5, delay: Math.random() * 5,
+        const KiteSky = ({ isDarkMode }) => {
+            const kites = useMemo(() => {
+                const colors = ['#f87171', '#fbbf24', '#34d399', '#60a5fa', '#f472b6', '#a78bfa'];
+                return Array.from({ length: 8 }).map((_, i) => ({
+                    id: i,
+                    left: Math.random() * 90,
+                    size: 35 + Math.random() * 40,
+                    duration: 12 + Math.random() * 15,
+                    delay: Math.random() * 10,
                     color: colors[i % colors.length]
                 }));
             }, []);
 
             return (
-                <div className="fixed inset-0 pointer-events-none z-30">
-                    {rockets.map(r => (
-                        <div key={r.id} className="absolute inset-0">
-                            <div className="absolute animate-rocket w-0.5 h-12 rounded-full blur-[1px]"
-                                 style={{ left: `${r.left}%`, backgroundColor: r.color, '--target-y': r.targetY, animationDuration: `${r.duration}s`, animationDelay: `${r.delay}s`, boxShadow: `0 0 10px ${r.color}` }}>
-                                <div className="absolute top-full left-1/2 -translate-x-1/2 w-4 h-16 opacity-40"
-                                     style={{ background: `linear-gradient(to bottom, ${r.color}, transparent)` }}></div>
-                            </div>
-                            <div className="absolute" style={{ left: `${r.left}%`, top: r.targetY }}>
-                                <div className="absolute -translate-x-1/2 -translate-y-1/2 w-16 h-16 rounded-full bg-yellow-400 blur-xl animate-pop opacity-0"
-                                     style={{ backgroundColor: r.color, animationDuration: `${r.duration}s`, animationDelay: `${r.delay + r.duration * 0.75}s` }}></div>
-                                {[...Array(12)].map((_, pi) => (
-                                    <div key={pi} className="absolute w-1.5 h-1.5 rounded-full bg-orange-400 animate-bit opacity-0"
-                                         style={{ 
-                                            backgroundColor: r.color,
-                                            boxShadow: `0 0 8px ${r.color}`,
-                                            '--p-x': `${(Math.random() - 0.5) * 220}px`, 
-                                            '--p-y': `${(Math.random() - 0.5) * 220}px`, 
-                                            animationDuration: `${r.duration}s`, 
-                                            animationDelay: `${r.delay + r.duration * 0.75}s` 
-                                        }}></div>
-                                ))}
-                            </div>
+                <div className="fixed inset-0 pointer-events-none z-0">
+                    {kites.map(k => (
+                        <div key={k.id} className="absolute animate-kite" 
+                             style={{ left: `${k.left}%`, animationDuration: `${k.duration}s`, animationDelay: `${k.delay}s` }}>
+                            <svg width={k.size} height={k.size} viewBox="0 0 100 100" fill={k.color} style={{ opacity: isDarkMode ? 0.35 : 0.55 }}>
+                                <path d="M50 0 L100 50 L50 100 L0 50 Z" />
+                                <path d="M50 0 L50 100 M0 50 L100 50" stroke="rgba(255,255,255,0.3)" strokeWidth="2" />
+                                <path d="M50 100 Q60 120 50 150" fill="none" stroke="white" strokeWidth="2" />
+                            </svg>
                         </div>
                     ))}
                 </div>
@@ -216,22 +197,22 @@
         const CardRain = ({ isDarkMode }) => {
             const symbols = useMemo(() => {
                 const icons = ['spade', 'heart', 'diamond', 'club'];
-                return Array.from({ length: 40 }).map((_, i) => {
+                return Array.from({ length: 30 }).map((_, i) => {
                     const name = icons[i % 4];
-                    let color = isDarkMode ? '#fde047' : '#f59e0b';
-                    if (name === 'heart' || name === 'diamond') color = '#ef4444';
+                    let color = isDarkMode ? '#10b981' : '#059669'; 
+                    if (name === 'heart' || name === 'diamond') color = '#f97316'; 
                     return {
                         id: i, name, color,
                         left: Math.random() * 100,
                         size: 16 + Math.random() * 14,
-                        duration: 6 + Math.random() * 9,
+                        duration: 8 + Math.random() * 10,
                         delay: Math.random() * 12
                     };
                 });
             }, [isDarkMode]);
 
             return (
-                <div className="fixed inset-0 pointer-events-none overflow-hidden z-10">
+                <div className="fixed inset-0 pointer-events-none overflow-hidden z-10 opacity-30">
                     {symbols.map(s => (
                         <div key={s.id} className="absolute animate-cards" 
                              style={{ left: `${s.left}%`, animationDuration: `${s.duration}s`, animationDelay: `${s.delay}s`, color: s.color }}>
@@ -242,34 +223,55 @@
             );
         };
 
-        const CelebrationSky = ({ isDarkMode }) => {
-            const items = useMemo(() => {
-                const colors = isDarkMode ? ['#fde047', '#ffffff', '#ca8a04'] : ['#f87171', '#60a5fa', '#34d399'];
-                return Array.from({ length: 30 }).map((_, i) => ({
-                    id: i, color: colors[i % colors.length], left: Math.random() * 100,
-                    size: 3, dur: 5 + Math.random() * 6, del: Math.random() * 6
-                }));
-            }, [isDarkMode]);
-            return (
-                <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
-                    {items.map(c => (
-                        <div key={c.id} className="absolute animate-confetti" style={{ left: `${c.left}%`, backgroundColor: c.color, width: c.size, height: c.size, animationDuration: `${c.dur}s`, animationDelay: `${c.del}s`, borderRadius: '50%' }}></div>
+        const MugguDesign = ({ isDarkMode }) => (
+            <svg width="280" height="280" viewBox="0 0 200 200" className="absolute animate-muggu pointer-events-none">
+                <g fill="none" stroke={isDarkMode ? "#fbbf24" : "#ea580c"} strokeWidth="1.2" strokeLinecap="round">
+                    {[...Array(7)].map((_, i) => [...Array(7)].map((_, j) => (
+                        <circle key={`${i}-${j}`} cx={40 + i * 20} cy={40 + j * 20} r="0.8" fill="currentColor" />
+                    )))}
+                    <path d="M100 40 C120 40 140 60 140 100 C140 140 120 160 100 160 C80 160 60 140 60 100 C60 60 80 40 100 40" strokeWidth="2.5" />
+                    <path d="M40 100 C40 80 60 60 100 60 C140 60 160 80 160 100 C160 120 140 140 100 140 C60 140 40 120 40 100" strokeWidth="2.5" />
+                    {[45, 135, 225, 315].map(deg => (
+                        <path key={deg} d="M100 100 Q140 60 180 100" transform={`rotate(${deg} 100 100)`} strokeOpacity="0.6" />
                     ))}
-                </div>
-            );
-        };
+                    <circle cx="100" cy="100" r="4" fill={isDarkMode ? "#fbbf24" : "#ea580c"} />
+                </g>
+            </svg>
+        );
 
-        const FireworksDisplay = ({ isDarkMode }) => (
-            <div className="relative w-64 h-64 mx-auto mb-6 flex items-center justify-center overflow-hidden">
-                <div className={`absolute inset-0 rounded-full blur-[60px] opacity-20 ${isDarkMode ? 'bg-yellow-500' : 'bg-orange-500'}`}></div>
-                <div className="relative z-20 flex flex-col items-center animate-glow">
-                    <div className={`text-7xl font-black italic tracking-tighter ${isDarkMode ? 'text-yellow-400 gold-glow' : 'text-orange-600'} drop-shadow-2xl`}>2026</div>
-                    <div className={`text-[10px] font-black uppercase tracking-[0.4em] mt-[-8px] ${isDarkMode ? 'text-white/60' : 'text-slate-500'}`}>Club Official</div>
+        const RealisticFire = () => (
+            <div className="relative w-32 h-44 flex flex-col items-center justify-end overflow-visible">
+                <div className="absolute bottom-10 w-28 h-28 bg-orange-600/30 rounded-full blur-[45px] animate-pulse"></div>
+
+                <div className="relative w-full h-32 flex items-end justify-center pb-4 z-20">
+                    <div className="absolute bottom-2 w-14 h-28 bg-gradient-to-t from-red-600 via-orange-500 to-transparent animate-flame opacity-60 flame-path blur-[2px]"></div>
+                    <div className="absolute bottom-2 w-10 h-22 bg-gradient-to-t from-orange-600 via-yellow-400 to-transparent animate-flame delay-75 flame-path blur-[1px]"></div>
+                    <div className="absolute bottom-3 w-6 h-12 bg-white/90 animate-flame delay-150 flame-path blur-[1.5px] opacity-80"></div>
                 </div>
+
+                <div className="relative w-24 h-10 z-10 flex justify-center items-end -mb-1">
+                    <div className="w-14 h-5 bg-[#3e2723] rounded-full rotate-[-15deg] shadow-xl border-b-2 border-black/40 translate-x-2"></div>
+                    <div className="w-14 h-5 bg-[#211209] rounded-full rotate-[15deg] shadow-xl border-b-2 border-black/40 -translate-x-2"></div>
+                    <div className="absolute bottom-2 w-12 h-6 bg-[#4e342e] rounded-full shadow-lg border-b-2 border-black/30 ring-1 ring-black/10"></div>
+                </div>
+
+                <div className="absolute bottom-6 w-12 h-4 bg-yellow-400/40 rounded-full blur-md z-15"></div>
+
                 {[...Array(12)].map((_, i) => (
-                    <div key={i} className={`absolute w-1 h-1 rounded-full animate-spark ${isDarkMode ? 'bg-yellow-300' : 'bg-orange-400'}`}
-                         style={{ left: `${20 + Math.random() * 60}%`, top: `${40 + Math.random() * 40}%`, animationDelay: `${Math.random() * 2}s` }}></div>
+                    <div key={i} className="absolute w-1 h-1 bg-yellow-300 rounded-full animate-ember" 
+                         style={{ left: `${25 + Math.random() * 50}%`, bottom: '30%', animationDelay: `${Math.random() * 4}s`, animationDuration: `${2 + Math.random() * 2}s` }}></div>
                 ))}
+            </div>
+        );
+
+        const SankranthiDisplay = ({ isDarkMode }) => (
+            <div className="relative w-72 h-80 mx-auto mb-10 flex flex-col items-center justify-center">
+                <MugguDesign isDarkMode={isDarkMode} />
+                <div className="relative z-20 flex flex-col items-center mt-14">
+                    <RealisticFire />
+                    <div className={`text-6xl font-black italic tracking-tighter ${isDarkMode ? 'text-orange-400 saffron-glow' : 'text-orange-600'} drop-shadow-2xl mt-4 leading-none`}>2026</div>
+                    <div className={`text-[10px] font-black uppercase tracking-[0.4em] mt-1 ${isDarkMode ? 'text-white/60' : 'text-slate-500'}`}>Sankranthi Club</div>
+                </div>
             </div>
         );
 
@@ -309,17 +311,11 @@
                 document.body.style.backgroundColor = isDarkMode ? "#020617" : "#f1f5f9";
             }, [game, isDarkMode]);
 
-            useEffect(() => {
-                if (!showWelcome && scrollRef.current && game.rounds.length > 0) {
-                    scrollRef.current.scrollTo({ top: scrollRef.current.scrollHeight, behavior: 'smooth' });
-                }
-            }, [game.rounds, showWelcome]);
-
             const submitScores = (isEditing = false) => {
                 setForm(f => ({ ...f, error: null }));
                 const entry = players.map((p, i) => inactive.includes(i) ? 0 : parseInt(form.scores[p] || 0));
                 if (entry.filter((s, i) => !inactive.includes(i) && s === 0).length !== 1) {
-                    setForm(f => ({ ...f, error: "Missing score or multiple winners (0)." })); return;
+                    setForm(f => ({ ...f, error: "Exactly one winner (0) required." })); return;
                 }
                 if (isEditing) {
                     const up = [...rounds]; up[ui.editIdx] = entry;
@@ -357,25 +353,24 @@
 
             const midGameJoin = () => {
                 if(!form.name.trim()) return;
-                const currentHighest = activeTotals.length > 0 ? Math.max(...activeTotals) : 0;
+                const activeHigh = activeTotals.length > 0 ? Math.max(...activeTotals) : 0;
                 setGame(g => ({
                     ...g, players: [...g.players, form.name.trim()], reEntries: [...g.reEntries, 0],
-                    rounds: g.rounds.map((r, i) => i === 0 ? [...r, currentHighest + 1] : [...r, 0])
+                    rounds: g.rounds.map((r, i) => i === 0 ? [...r, activeHigh + 1] : [...r, 0])
                 }));
                 setForm(f => ({ ...f, name: '' }));
             };
 
             const savePlayerNameEdit = (idx) => {
                 if (!form.editVal.trim()) return;
-                const updatedPlayers = [...players];
-                updatedPlayers[idx] = form.editVal.trim();
-                setGame(prev => ({ ...prev, players: updatedPlayers }));
+                const up = [...players]; up[idx] = form.editVal.trim();
+                setGame(prev => ({ ...prev, players: up }));
                 setForm(f => ({ ...f, editIdx: null, editVal: '' }));
             };
 
-            const confirmReset = () => {
-                setUi(u => ({ ...u, confirm: { msg: "Archive session and reset all scores to 0?", fn: () => {
-                    const summary = { id: Date.now(), ts: Date.now(), date: new Date().toLocaleString(), players: [...players], finalScores: [...totals] };
+            const startNewMatch = () => {
+                setUi(u => ({ ...u, confirm: { msg: "Archive and reset session to 0?", fn: () => {
+                    const summary = { id: Date.now(), ts: Date.now(), date: new Date().toLocaleString(), players: [...players], rounds: [...rounds], finalScores: [...totals] };
                     setGame(prev => ({ ...prev, rounds: [], inactive: [], reEntries: new Array(prev.players.length).fill(0), history: [summary, ...(prev.history || [])].slice(0, 5) }));
                     setUi(prevUi => ({ ...prevUi, confirm: null }));
                 }}}));
@@ -384,17 +379,16 @@
             if (showWelcome) {
                 return (
                     <div className={`fixed inset-0 flex flex-col items-center justify-center p-8 transition-colors duration-500 overflow-hidden ${isDarkMode ? 'bg-[#020617] text-white' : 'bg-slate-50 text-slate-900'}`}>
-                        {isDarkMode && <div className="absolute inset-0 z-0"><img src="image.png" alt="" className="w-full h-full object-cover opacity-50" onError={(e) => e.target.style.display = 'none'} /><div className="absolute inset-0 bg-gradient-to-t from-[#020617] via-[#020617]/70 to-transparent"></div></div>}
-                        <CelebrationSky isDarkMode={isDarkMode} />
+                        {isDarkMode && <div className="absolute inset-0 z-0"><img src="image.png" alt="" className="w-full h-full object-cover opacity-30" onError={(e) => e.target.style.display = 'none'} /><div className="absolute inset-0 bg-gradient-to-t from-[#020617] via-transparent to-transparent"></div></div>}
+                        <KiteSky isDarkMode={isDarkMode} />
                         <CardRain isDarkMode={isDarkMode} />
-                        <RocketBlasts />
                         <div className="max-w-sm w-full text-center relative z-10">
                             <CountdownTimer isDarkMode={isDarkMode} />
-                            <FireworksDisplay isDarkMode={isDarkMode} />
-                            <h1 className={`text-3xl font-black uppercase italic mb-1 ${isDarkMode ? 'text-yellow-500' : 'text-orange-600'}`}>Park View Pokers</h1>
-                            <h2 className={`text-5xl font-black uppercase tracking-widest mb-12 ${isDarkMode ? 'text-slate-300' : 'text-slate-500'}`}>Club</h2>
+                            <SankranthiDisplay isDarkMode={isDarkMode} />
+                            <h1 className={`text-3xl font-black uppercase italic mb-1 tracking-tighter ${isDarkMode ? 'text-orange-400' : 'text-orange-600'} saffron-glow`}>Park View Pokers</h1>
+                            <h2 className={`text-5xl font-black uppercase tracking-widest mb-10 leading-none ${isDarkMode ? 'text-white/40' : 'text-slate-300'}`}>Club</h2>
                             <div className="flex gap-2">
-                                <button onClick={() => setShowWelcome(false)} className={`flex-1 h-16 rounded-3xl font-black uppercase tracking-widest shadow-2xl transition-all btn-active ${isDarkMode ? 'bg-orange-600' : 'bg-orange-500 text-white'}`}>Open Match</button>
+                                <button onClick={() => setShowWelcome(false)} className={`flex-1 h-16 rounded-3xl font-black uppercase tracking-widest shadow-2xl transition-all btn-active ${isDarkMode ? 'bg-orange-600 hover:bg-orange-500' : 'bg-orange-600 text-white'}`}>Open Match</button>
                                 <button onClick={() => setIsDarkMode(!isDarkMode)} className={`w-16 h-16 rounded-3xl flex items-center justify-center shadow-2xl btn-active ${isDarkMode ? 'bg-slate-800 text-yellow-400' : 'bg-white border'}`}><Icon name={isDarkMode ? "sun" : "moon"} /></button>
                             </div>
                         </div>
@@ -404,17 +398,17 @@
 
             return (
                 <div className={`fixed inset-0 flex flex-col transition-colors duration-500 overflow-hidden ${isDarkMode ? 'bg-[#020617] text-slate-100' : 'bg-slate-50 text-slate-900'}`}>
-                    <CelebrationSky isDarkMode={isDarkMode} />
+                    <KiteSky isDarkMode={isDarkMode} />
                     <CardRain isDarkMode={isDarkMode} />
                     
                     <nav className={`flex-none px-4 py-4 z-40 pt-safe border-b backdrop-blur-xl ${isDarkMode ? 'bg-slate-900/70 border-white/10' : 'bg-white/90 border-slate-200'}`}>
                         <div className="max-w-4xl mx-auto flex items-center justify-between">
                             <div className="flex items-center gap-2">
                                 <button onClick={() => setShowWelcome(true)} className={`w-10 h-10 rounded-2xl flex items-center justify-center text-white shadow-lg btn-active ${isDarkMode ? 'bg-orange-500' : 'bg-orange-600'}`}><Icon name="home" /></button>
-                                <div className="text-left leading-none"><h1 className={`text-[11px] font-black uppercase tracking-tight ${isDarkMode ? 'text-yellow-400' : 'text-orange-600'}`}>PV Pokers</h1><span className="text-[9px] font-bold uppercase opacity-80">2026 Session</span></div>
+                                <div className="text-left leading-none"><h1 className={`text-[11px] font-black uppercase tracking-tight ${isDarkMode ? 'text-orange-400' : 'text-orange-600'}`}>PV Pokers</h1><span className="text-[9px] font-bold uppercase opacity-80">2026 Session</span></div>
                             </div>
                             <div className="flex items-center gap-1">
-                                <button onClick={confirmReset} className="p-2 opacity-70 hover:opacity-100 text-white btn-active" title="Reset Session"><Icon name="rotate-ccw" /></button>
+                                <button onClick={startNewMatch} className="p-2 opacity-70 hover:opacity-100 text-white btn-active" title="Reset Score"><Icon name="rotate-ccw" /></button>
                                 <button onClick={() => setIsDarkMode(!isDarkMode)} className="p-2 opacity-70 btn-active transition-colors"><Icon name={isDarkMode ? "sun" : "moon"} /></button>
                                 <button onClick={() => setUi({...ui, history: true})} className="p-2 opacity-70 btn-active transition-colors"><Icon name="history" /></button>
                                 <button onClick={() => setUi({...ui, settings: true})} className="p-2 opacity-70 btn-active transition-colors"><Icon name="settings-2" /></button>
@@ -423,14 +417,14 @@
                     </nav>
 
                     <div className="flex-1 flex flex-col overflow-hidden relative">
-                        <div className={`flex-none flex border-b-2 z-20 ${isDarkMode ? 'bg-slate-950 border-white/10 shadow-lg' : 'bg-slate-100 shadow-sm'}`}>
+                        <div className={`flex-none flex border-b-2 z-20 ${isDarkMode ? 'bg-slate-950 border-white/10 shadow-lg' : 'bg-white shadow-sm'}`}>
                             <div className="w-10 text-[8px] font-black flex items-center justify-center italic text-slate-500">Hand</div>
                             <div className="flex-1 flex">
                                 {players.map((p, i) => (
                                     <div key={i} className={`flex-1 border-r last:border-r-0 py-3 text-center truncate ${inactive.includes(i) ? 'opacity-30 grayscale bg-black/5' : ''}`}>
                                         <div className="flex flex-col items-center justify-center px-0.5 min-w-0">
-                                            <span className={`text-[10px] font-black uppercase truncate block w-full tracking-tight ${isDarkMode ? 'text-yellow-500' : 'text-orange-700'}`}>{p}</span>
-                                            {reEntries[i] > 0 && <span className="bg-indigo-600 text-white text-[6px] px-1 rounded-sm leading-none py-1">R{reEntries[i]}</span>}
+                                            <span className={`text-[10px] font-black uppercase truncate block w-full tracking-tight ${isDarkMode ? 'text-orange-400' : 'text-orange-700'}`}>{p}</span>
+                                            {reEntries[i] > 0 && <span className="bg-rose-600 text-white text-[6px] px-1 rounded-sm leading-none py-1">R{reEntries[i]}</span>}
                                         </div>
                                     </div>
                                 ))}
@@ -440,7 +434,7 @@
                             {rounds.map((round, rIdx) => (
                                 <div key={rIdx} className={`flex border-b transition-colors ${isDarkMode ? 'border-white/5 hover:bg-white/5' : 'border-slate-200 hover:bg-white'}`}>
                                     <div className="w-10 flex flex-col items-center justify-center py-4"><span className="text-[10px] font-bold text-slate-500">{rIdx + 1}</span><button onClick={() => { setUi({...ui, editIdx: rIdx}); const c = {}; players.forEach(p => c[p] = round[players.indexOf(p)]); setForm({...form, scores: c}); }} className="text-orange-500/40 mt-1"><Icon name="pencil-line" size={12} /></button></div>
-                                    <div className="flex-1 flex">{round.map((score, cIdx) => (<div key={cIdx} className={`flex-1 border-r last:border-r-0 flex items-center justify-center py-4 ${inactive.includes(cIdx) ? 'opacity-10' : ''}`}>{score === 0 ? <span className="w-7 h-7 rounded-full bg-orange-600 text-white flex items-center justify-center text-[10px] font-black shadow-lg">0</span> : <span className="text-sm font-bold tabular-nums">{score}</span>}</div>))}</div>
+                                    <div className="flex-1 flex">{round.map((score, cIdx) => (<div key={cIdx} className={`flex-1 border-r last:border-r-0 flex items-center justify-center py-4 ${inactive.includes(cIdx) ? 'opacity-10' : ''}`}>{score === 0 ? <span className="w-7 h-7 rounded-full bg-rose-600 text-white flex items-center justify-center text-[10px] font-black shadow-md border border-white/20">0</span> : <span className="text-sm font-bold tabular-nums">{score}</span>}</div>))}</div>
                                 </div>
                             ))}
                         </div>
@@ -449,7 +443,7 @@
                             <div className="flex-1 flex">
                                 {totals.map((total, i) => (
                                     <div key={i} className={`flex-1 py-4 border-r last:border-r-0 border-white/5 text-center font-black text-lg min-w-0 ${inactive.includes(i) ? 'opacity-50 line-through' : ''}`}>
-                                        <span className="flex items-center justify-center gap-1">{total} {i === leaderIdx && !inactive.includes(i) && rounds.length > 0 && <Icon name="crown" size={14} className="text-yellow-400 animate-bounce" />}</span>
+                                        <span className="flex items-center justify-center gap-1">{total} {i === leaderIdx && !inactive.includes(i) && rounds.length > 0 && <Icon name="crown" size={14} className="text-amber-400 animate-bounce" />}</span>
                                     </div>
                                 ))}
                             </div>
@@ -458,14 +452,14 @@
 
                     <div className={`p-5 pb-safe flex-none border-t ${isDarkMode ? 'bg-slate-900/95 border-white/10' : 'bg-white border-slate-200'}`}>
                         {matchOver ? (
-                            <div className="text-center p-2 animate-in zoom-in-95 duration-500"><h4 className="text-xl font-black italic text-orange-500 uppercase mb-3 drop-shadow-xl">Winner Found!</h4><button onClick={confirmReset} className="px-10 py-4 bg-orange-600 text-white rounded-full text-xs font-black uppercase active:scale-95 transition-all shadow-xl">New Match</button></div>
+                            <div className="text-center p-2 animate-in zoom-in-95 duration-500"><h4 className="text-xl font-black italic text-orange-500 uppercase mb-3">Winner Found!</h4><button onClick={startNewMatch} className="px-10 py-4 bg-orange-600 text-white rounded-full text-xs font-black uppercase active:scale-95 transition-all shadow-xl">New Match</button></div>
                         ) : (
                             <div className="flex gap-2 max-w-lg mx-auto">
-                                <button onClick={() => setUi({...ui, add: true})} className="flex-1 h-16 bg-orange-600 text-white rounded-3xl font-black uppercase tracking-widest shadow-xl flex items-center justify-center gap-3 btn-active transition-all"><Icon name="plus" size={24} /> Record Hand</button>
+                                <button onClick={() => setUi({...ui, add: true})} className="flex-1 h-16 bg-rose-600 hover:bg-rose-500 text-white rounded-3xl font-black uppercase tracking-widest shadow-xl flex items-center justify-center gap-3 btn-active transition-all"><Icon name="plus" size={24} /> Record Hand</button>
                                 <button onClick={() => {
-                                    const text = `🪁 PV Pokers 2026 🪁\n\n` + players.map((p, i) => `${p}: ${totals[i]}${reEntries[i] > 0 ? ` (R${reEntries[i]})` : ''}${inactive.includes(i) ? ' (Out)' : ''}`).join('\n');
-                                    if(navigator.share) navigator.share({text}); else { const el = document.createElement('textarea'); el.value = text; document.body.appendChild(el); el.select(); document.execCommand('copy'); document.body.removeChild(el); setUi(u=>({...u, confirm: {msg: "Scores copied!", fn: () => setUi(us=>({...us, confirm: null})) } })); }
-                                }} className={`px-6 h-16 rounded-2xl font-black shadow-xl flex items-center justify-center btn-active transition-all ${isDarkMode ? 'bg-indigo-600 text-white' : 'bg-slate-800 text-white'}`}>
+                                    const text = `🪁 PV Pokers Club 2026 🪁\n\n` + players.map((p, i) => `${p}: ${totals[i]}${reEntries[i] > 0 ? ` (R${reEntries[i]})` : ''}${inactive.includes(i) ? ' (Out)' : ''}`).join('\n');
+                                    if(navigator.share) navigator.share({text}); else { const el = document.createElement('textarea'); el.value = text; document.body.appendChild(el); el.select(); document.execCommand('copy'); document.body.removeChild(el); setUi(u=>({...u, confirm: {msg: "Standings copied to clipboard!", fn: () => setUi(us=>({...us, confirm: null})) } })); }
+                                }} className={`px-6 h-16 rounded-2xl font-black shadow-xl flex items-center justify-center btn-active transition-all ${isDarkMode ? 'bg-slate-800 text-emerald-400' : 'bg-slate-100 text-slate-800'}`}>
                                     <Icon name="share-2" size={24} />
                                 </button>
                             </div>
@@ -479,27 +473,27 @@
                             {(ui.add || ui.editIdx !== null) && (
                                 <div className={`w-full max-w-md rounded-[2.5rem] p-8 shadow-2xl border animate-in slide-in-from-bottom-10 ${isDarkMode ? 'bg-slate-900 border-white/10 text-white' : 'bg-white border-slate-200 text-slate-900'}`}>
                                     <div className="flex justify-between items-center mb-6"><h3 className="text-xl font-black text-orange-500 uppercase italic tracking-tight">{ui.editIdx !== null ? "Edit Scores" : "Hand Result"}</h3><button onClick={() => setUi({...ui, add: false, editIdx: null})} className="text-slate-500 p-2"><Icon name="x" size={28} /></button></div>
-                                    {form.error && <div className="mb-4 bg-red-500/10 p-3 rounded-xl text-[10px] font-black text-red-500 uppercase animate-bounce">{form.error}</div>}
+                                    {form.error && <div className="mb-4 bg-red-500/10 p-3 rounded-xl text-[10px] font-black text-rose-500 uppercase animate-bounce">{form.error}</div>}
                                     <div className="grid grid-cols-2 gap-4 mb-8 max-h-[40vh] overflow-y-auto pr-1 no-scrollbar">{players.map((p, idx) => !inactive.includes(idx) && (<div key={idx} className="flex flex-col gap-2"><label className="text-[10px] font-black uppercase text-slate-500 truncate tracking-tighter">{p}</label><input type="number" inputMode="numeric" value={form.scores[p] || ''} onChange={e => setForm({...form, scores: {...form.scores, [p]: e.target.value}})} className={`w-full p-5 rounded-2xl text-center text-3xl font-black outline-none border ${isDarkMode ? 'bg-slate-950/50 border-white/5 text-orange-500' : 'bg-slate-50 border-slate-200'}`} placeholder="0" /></div>))}</div>
-                                    <button onClick={() => submitScores(ui.editIdx !== null)} className="w-full bg-orange-600 py-6 rounded-3xl font-black uppercase shadow-xl text-white tracking-widest text-xs btn-active">Confirm Hand</button>
+                                    <button onClick={() => submitScores(ui.editIdx !== null)} className="w-full bg-rose-600 hover:bg-rose-500 py-6 rounded-3xl font-black uppercase shadow-xl text-white tracking-widest text-xs btn-active">Confirm Hand</button>
                                 </div>
                             )}
 
                             {ui.settings && (
                                 <div className={`w-full max-sm rounded-[2.5rem] p-8 shadow-2xl border ${isDarkMode ? 'bg-slate-900 border-white/10 text-white' : 'bg-white border-slate-200 text-slate-900'}`}>
                                     <h3 className="text-xl font-black text-orange-500 uppercase mb-8 flex items-center gap-3 tracking-tighter"><Icon name="users" /> 2026 Registry</h3>
-                                    <input type="text" value={form.name} onChange={e => setForm({...form, name: e.target.value})} placeholder="New Member Name" className={`w-full p-5 rounded-2xl mb-4 font-bold outline-none border ${isDarkMode ? 'bg-slate-950 border-white/5 text-indigo-400' : 'bg-slate-50 border-slate-200 text-slate-900'}`} />
+                                    <input type="text" value={form.name} onChange={e => setForm({...form, name: e.target.value})} placeholder="New Player Name" className={`w-full p-5 rounded-2xl mb-4 font-bold outline-none border ${isDarkMode ? 'bg-slate-950 border-white/5 text-indigo-400' : 'bg-slate-50 border-slate-200 text-slate-900'}`} />
                                     <div className="grid grid-cols-2 gap-2 mb-8">
                                         <button onClick={() => { if(form.name) { setGame(g=>({...g, players: [...g.players, form.name.trim()], rounds: [], inactive: [], reEntries: new Array(g.players.length+1).fill(0)})); setForm(f=>({...f, name:''})); setUi(u=>({...u, settings: false})); }}} className={`py-4 rounded-2xl text-[10px] font-black uppercase border btn-active ${isDarkMode ? 'bg-slate-800' : 'bg-slate-100 shadow-sm'}`}>Reset Table</button>
-                                        <button onClick={midGameJoin} className="py-4 bg-orange-600 text-white rounded-2xl text-[10px] font-black uppercase shadow-lg btn-active">Join @ Max+1</button>
+                                        <button onClick={midGameJoin} className="py-4 bg-emerald-600 text-white rounded-2xl text-[10px] font-black uppercase shadow-lg btn-active">Join @ Max+1</button>
                                     </div>
                                     <div className="space-y-2 mb-8 max-h-48 overflow-y-auto no-scrollbar">
                                         {players.map((p, i) => (
                                             <div key={i} className={`flex items-center justify-between p-4 rounded-2xl border ${isDarkMode ? 'bg-white/5 border-white/10' : 'bg-slate-50 border-slate-200'}`}>
                                                 {form.editIdx === i ? (
                                                     <div className="flex-1 flex gap-2 min-w-0">
-                                                        <input type="text" value={form.editVal} onChange={e => setForm({...form, editVal: e.target.value})} className="flex-1 bg-black/40 px-3 py-1 rounded text-[10px] font-black uppercase outline-none text-yellow-500 min-w-0" autoFocus />
-                                                        <button onClick={() => savePlayerNameEdit(i)} className="text-yellow-500 shrink-0"><Icon name="check-circle-2" /></button>
+                                                        <input type="text" value={form.editVal} onChange={e => setForm({...form, editVal: e.target.value})} className="flex-1 bg-black/40 px-3 py-1 rounded text-[10px] font-black uppercase outline-none text-orange-500 min-w-0" autoFocus />
+                                                        <button onClick={() => savePlayerNameEdit(i)} className="text-emerald-500 shrink-0"><Icon name="check-circle-2" /></button>
                                                     </div>
                                                 ) : (
                                                     <>
@@ -513,15 +507,15 @@
                                             </div>
                                         ))}
                                     </div>
-                                    <button onClick={() => setUi({...ui, settings: false})} className="w-full py-5 bg-slate-950 text-white rounded-2xl font-black uppercase text-xs btn-active border border-white/5">Back</button>
+                                    <button onClick={() => setUi({...ui, settings: false})} className="w-full py-5 bg-slate-950 text-white rounded-2xl font-black uppercase text-xs btn-active border border-white/5">Close Registry</button>
                                 </div>
                             )}
 
                             {ui.history && (
                                 <div className={`w-full max-w-md rounded-[2.5rem] p-8 shadow-2xl border ${isDarkMode ? 'bg-slate-900 border-white/10 text-white' : 'bg-white border-slate-200 text-slate-900'}`}>
-                                    <h3 className="text-xl font-black text-indigo-400 uppercase mb-6 flex items-center gap-3 tracking-tighter"><Icon name="history" /> History Log</h3>
+                                    <h3 className="text-xl font-black text-emerald-500 uppercase mb-6 flex items-center gap-3 tracking-tighter"><Icon name="history" /> History Log</h3>
                                     <div className="space-y-4 max-h-[60vh] overflow-y-auto pr-1 no-scrollbar">
-                                        {sessionHistory.length === 0 ? <div className="py-20 text-center opacity-20 text-xs font-black uppercase italic tracking-widest text-center">No Archives</div> : sessionHistory.map((log) => (<div key={log.id} className={`p-4 rounded-2xl border ${isDarkMode ? 'bg-black/20 border-white/5 shadow-inner' : 'bg-slate-100 border-slate-200'}`}><div className="flex justify-between mb-3 border-b border-white/5 pb-2 text-yellow-500 font-black tracking-widest"><span className="text-[10px]">{log.date}</span><button onClick={() => { if(confirm("Restore this archive? Current match will be replaced.")) { setGame(prev => ({...prev, players: log.players, rounds: log.rounds, inactive: [] })); setUi({...ui, history: false}); } }} className="text-[8px] bg-rose-600 text-white px-2 py-1 rounded font-black uppercase active:scale-90">Restore</button></div><div className="grid grid-cols-2 gap-2">{log.players.map((pName, pIdx) => (<div key={pIdx} className="flex items-center justify-between text-[10px] opacity-80 truncate"><span>{pName}</span><span className="font-bold">{log.finalScores[pIdx]}</span></div>))}</div></div>))}
+                                        {sessionHistory.length === 0 ? <div className="py-20 text-center opacity-20 text-xs font-black uppercase italic tracking-widest text-center">No Archives</div> : sessionHistory.map((log) => (<div key={log.id} className={`p-4 rounded-2xl border ${isDarkMode ? 'bg-black/20 border-white/5 shadow-inner' : 'bg-white border-slate-100 shadow-sm'}`}><div className="flex justify-between mb-3 border-b border-white/5 pb-2 text-emerald-500 font-black tracking-widest"><span className="text-[10px]">{log.date}</span><button onClick={() => { setUi({...ui, confirm: { msg: "Restore this archive? Current match will be overwritten.", fn: () => { setGame(prev => ({...prev, players: log.players, rounds: log.rounds, inactive: [] })); setUi({...ui, history: false, confirm: null}); } }}); }} className="text-[8px] bg-rose-600 text-white px-2 py-1 rounded font-black uppercase active:scale-90">Restore</button></div><div className="grid grid-cols-2 gap-2">{log.players.map((pName, pIdx) => (<div key={pIdx} className="flex items-center justify-between text-[10px] opacity-80 truncate"><span>{pName}</span><span className="font-bold">{log.finalScores[pIdx]}</span></div>))}</div></div>))}
                                     </div>
                                     <button onClick={() => setUi({...ui, history: false})} className="w-full mt-8 py-5 bg-slate-950 text-white rounded-2xl font-black uppercase text-xs btn-active border border-white/5">Close Log</button>
                                 </div>
@@ -534,18 +528,18 @@
                                         {ui.bust.proj.some((t, i) => i !== ui.bust.current && !inactive.includes(i) && t >= 180) ? "The Door is Closed. Player at 180+ prohibits re-entry." : `Re-buy handicap entry at ${ui.bust.target}?`}
                                     </p></div>
                                     <div className="grid grid-cols-2 gap-4">
-                                        <button onClick={() => solveBust(true)} disabled={ui.bust.proj.some((t, i) => i !== ui.bust.current && !inactive.includes(i) && t >= 180)} className={`py-5 rounded-2xl text-xs font-black uppercase shadow-xl transition-all ${ui.bust.proj.some((t, i) => i !== ui.bust.current && !inactive.includes(i) && t >= 180) ? 'bg-slate-800 text-slate-600 opacity-20' : 'bg-orange-600 text-white btn-active'}`}>Re-entry</button>
-                                        <button onClick={() => solveBust(false)} className="bg-rose-700 py-5 text-white rounded-2xl text-xs font-black uppercase btn-active shadow-xl tracking-widest">Stay Out</button>
+                                        <button onClick={() => solveBust(true)} disabled={ui.bust.proj.some((t, i) => i !== ui.bust.current && !inactive.includes(i) && t >= 180)} className={`py-5 rounded-2xl text-xs font-black uppercase shadow-xl transition-all ${ui.bust.proj.some((t, i) => i !== ui.bust.current && !inactive.includes(i) && t >= 180) ? 'bg-slate-800 text-slate-600 opacity-20 shadow-none' : 'bg-orange-600 text-white btn-active shadow-lg'}`}>Re-entry</button>
+                                        <button onClick={() => solveBust(false)} className="bg-rose-700 py-5 text-white rounded-2xl text-xs font-black uppercase btn-active shadow-xl tracking-widest shadow-lg">Stay Out</button>
                                     </div>
                                 </div>
                             )}
 
                             {ui.confirm && (
-                                <div className="w-full max-w-xs rounded-[2.5rem] p-8 bg-slate-900 border border-white/10 text-center shadow-2xl animate-in zoom-in-95">
-                                    <Icon name="alert-triangle" size={32} className="text-yellow-500 mb-4 mx-auto" />
+                                <div className="w-full max-w-xs rounded-[2.5rem] p-8 bg-slate-950 border border-white/10 text-center shadow-2xl animate-in zoom-in-95">
+                                    <Icon name="alert-triangle" size={32} className="text-amber-500 mb-4 mx-auto" />
                                     <p className="text-sm font-black uppercase text-slate-200 mb-8 leading-tight tracking-tight">{ui.confirm.msg}</p>
                                     <div className="flex gap-2">
-                                        <button onClick={ui.confirm.fn} className="flex-1 py-4 bg-orange-600 text-white rounded-xl text-[10px] font-black uppercase btn-active">Yes</button>
+                                        <button onClick={ui.confirm.fn} className="flex-1 py-4 bg-emerald-600 text-white rounded-xl text-[10px] font-black uppercase btn-active">Yes</button>
                                         <button onClick={() => setUi({...ui, confirm: null})} className="flex-1 py-4 bg-slate-800 text-white rounded-xl text-[10px] font-black uppercase btn-active">No</button>
                                     </div>
                                 </div>
