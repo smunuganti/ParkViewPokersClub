@@ -4,20 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=0, viewport-fit=cover">
     
-    <!-- App Meta & Standalone Support -->
+    <!-- Deployment Meta Tags -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Rummy Scorer">
     <meta name="mobile-web-app-capable" content="yes">
-    <meta name="theme-color" content="#020617">
+    <meta name="theme-color" content="#1c0a0a">
     
-    <!-- Republic Day Icons -->
-    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 fill=%22%23020617%22/><text y=%22.9em%22 font-size=%2280%22 x=%2210%22>🇮🇳</text></svg>">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🇮🇳</text></svg>">
+    <!-- Valentine Icons -->
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 fill=%22%239f1239%22/><text y=%22.9em%22 font-size=%2280%22 x=%2210%22>💝</text></svg>">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💝</text></svg>">
 
-    <title>Rummy Scorer - Republic Day 2026</title>
+    <title>Rummy Scorer - Valentine's 2026 Production</title>
     
-    <!-- Core Frameworks -->
+    <!-- External Frameworks -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
@@ -25,30 +25,25 @@
     <script src="https://unpkg.com/lucide@latest"></script>
 
     <style>
-        /* REPUBLIC DAY ANIMATIONS */
-        @keyframes petal-fall {
-            0% { transform: translateY(-10vh) rotate(0deg) translateX(0); opacity: 0; }
-            10% { opacity: 0.6; }
-            90% { opacity: 0.6; }
-            100% { transform: translateY(105vh) rotate(360deg) translateX(30px); opacity: 0; }
+        /* VALENTINE ANIMATIONS */
+        @keyframes heart-fall {
+            0% { transform: translateY(-10vh) rotate(0deg) scale(0.5); opacity: 0; }
+            10% { opacity: 0.8; }
+            90% { opacity: 0.8; }
+            100% { transform: translateY(105vh) rotate(360deg) scale(1.2); opacity: 0; }
         }
-        @keyframes balloon-rise {
-            0% { transform: translateY(110vh) translateX(0) rotate(0deg); opacity: 0.8; }
-            100% { transform: translateY(-20vh) translateX(40px) rotate(15deg); opacity: 0.4; }
+        @keyframes heart-pulse {
+            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 10px rgba(225, 29, 72, 0.4)); }
+            50% { transform: scale(1.1); filter: drop-shadow(0 0 30px rgba(225, 29, 72, 0.8)); }
         }
-        @keyframes chakra-spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-        @keyframes pulse-aura {
-            0%, 100% { transform: scale(1); opacity: 0.2; }
-            50% { transform: scale(1.1); opacity: 0.35; }
+        @keyframes aura-glow {
+            0%, 100% { opacity: 0.3; transform: scale(1); filter: blur(50px); }
+            50% { opacity: 0.6; transform: scale(1.25); filter: blur(75px); }
         }
 
-        .animate-petals { animation: petal-fall 8s linear infinite; }
-        .animate-balloon { animation: balloon-rise linear infinite; }
-        .animate-chakra { animation: chakra-spin 15s linear infinite; }
-        .animate-aura { animation: pulse-aura 4s ease-in-out infinite; }
+        .animate-hearts { animation: heart-fall 10s linear infinite; }
+        .animate-heart-pulse { animation: heart-pulse 2.5s ease-in-out infinite; }
+        .animate-aura { animation: aura-glow 5s ease-in-out infinite; }
 
         ::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
@@ -60,11 +55,12 @@
             user-select: none;
             height: 100vh;
             width: 100vw;
+            background-color: #1c0a0a;
             transition: background-color 0.5s ease;
         }
         
         .glass-panel {
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.04);
             backdrop-filter: blur(16px);
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
@@ -75,13 +71,9 @@
         .pt-safe { padding-top: env(safe-area-inset-top); }
         .pb-safe { padding-bottom: env(safe-area-inset-bottom); }
 
-        .tricolor-saffron { color: #FF9933; }
-        .tricolor-green { color: #138808; }
-        .tricolor-navy { color: #000080; }
+        .rose-glow { text-shadow: 0 0 20px rgba(225, 29, 72, 0.6); }
 
-        .saffron-glow { text-shadow: 0 0 15px rgba(255, 153, 51, 0.6); }
-
-        /* Greystate Implementation */
+        /* Grey State Implementation */
         .player-inactive {
             filter: grayscale(1) !important;
             opacity: 0.25 !important;
@@ -110,8 +102,8 @@
             return <span ref={containerRef} className={`inline-flex items-center justify-center shrink-0 ${className}`} style={{ width: size, height: size }}></span>;
         };
 
-        const STORAGE_KEY = "rummy_scorer_prod_v1_fixed";
-        const THEME_KEY = "rummy_scorer_theme_pref";
+        const STORAGE_KEY = "rummy_scorer_prod_v187";
+        const THEME_KEY = "rummy_scorer_theme_mode";
         const DEFAULT_ROSTER = ['Player 1', 'Player 2', 'Player 3'];
 
         // --- Visual Assets ---
@@ -120,7 +112,7 @@
             const [timeLeft, setTimeLeft] = useState({ d: 0, h: 0, m: 0, s: 0, finished: false });
 
             useEffect(() => {
-                const targetDate = new Date("2026-01-26T00:00:00").getTime();
+                const targetDate = new Date("2026-02-14T00:00:00").getTime();
                 const timer = setInterval(() => {
                     const now = new Date().getTime();
                     const diff = targetDate - now;
@@ -141,109 +133,58 @@
 
             return (
                 <div className="flex flex-col items-center mb-6 relative z-20">
-                    <div className="text-[10px] font-black uppercase tracking-[0.3em] mb-3 opacity-50 text-center">Republic Day Countdown</div>
-                    {timeLeft.finished ? (
-                        <div className={`${isDarkMode ? 'bg-orange-600/30 text-orange-400' : 'bg-orange-500 text-white'} backdrop-blur-md px-10 py-2 rounded-full text-xs font-black uppercase tracking-[0.2em] inline-block border border-orange-500/30 shadow-2xl animate-pulse`}>
-                            Happy Republic Day 2026
-                        </div>
-                    ) : (
-                        <div className="flex gap-4">
-                            {[
-                                { label: 'Days', value: timeLeft.d },
-                                { label: 'Hrs', value: timeLeft.h },
-                                { label: 'Min', value: timeLeft.m },
-                                { label: 'Sec', value: timeLeft.s }
-                            ].map((unit, i) => (
-                                <div key={i} className="flex flex-col items-center">
-                                    <div className={`text-3xl font-black tabular-nums tracking-tighter ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
-                                        {String(unit.value).padStart(2, '0')}
-                                    </div>
-                                    <div className="text-[8px] font-bold uppercase tracking-widest opacity-40">{unit.label}</div>
+                    <div className="text-[10px] font-black uppercase tracking-[0.5em] mb-3 opacity-60 text-rose-400">Valentine's Day Countdown</div>
+                    <div className="flex gap-4">
+                        {[
+                            { label: 'Days', value: timeLeft.d },
+                            { label: 'Hrs', value: timeLeft.h },
+                            { label: 'Min', value: timeLeft.m },
+                            { label: 'Sec', value: timeLeft.s }
+                        ].map((unit, i) => (
+                            <div key={i} className="flex flex-col items-center">
+                                <div className={`text-3xl font-black tabular-nums tracking-tighter ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
+                                    {String(unit.value).padStart(2, '0')}
                                 </div>
-                            ))}
-                        </div>
-                    )}
-                </div>
-            );
-        };
-
-        const BalloonSky = ({ isDarkMode }) => {
-            const balloons = useMemo(() => {
-                const colors = ['#FF9933', '#FFFFFF', '#138808'];
-                return Array.from({ length: 12 }).map((_, i) => ({
-                    id: i, left: Math.random() * 95, size: 20 + Math.random() * 20,
-                    duration: 12 + Math.random() * 10, delay: Math.random() * 20, color: colors[i % colors.length]
-                }));
-            }, []);
-
-            return (
-                <div className="fixed inset-0 pointer-events-none z-0">
-                    {balloons.map(b => (
-                        <div key={b.id} className="absolute animate-balloon" style={{ left: `${b.left}%`, animationDuration: `${b.duration}s`, animationDelay: `${b.delay}s` }}>
-                            <div className="relative">
-                                <div style={{ width: b.size, height: b.size * 1.3, backgroundColor: b.color, borderRadius: '50% 50% 50% 50% / 40% 40% 60% 60%', boxShadow: 'inset -5px -5px 10px rgba(0,0,0,0.1)', opacity: isDarkMode ? 0.35 : 0.5 }}></div>
-                                <div className="absolute top-[95%] left-1/2 -translate-x-1/2 w-[1px] h-16 bg-white/10"></div>
+                                <div className="text-[8px] font-bold uppercase tracking-widest opacity-40">{unit.label}</div>
                             </div>
+                        ))}
+                    </div>
+                </div>
+            );
+        };
+
+        const HeartRain = () => {
+            const hearts = useMemo(() => {
+                const colors = ['#f43f5e', '#fb7185', '#fda4af', '#fff1f2', '#e11d48'];
+                return Array.from({ length: 25 }).map((_, i) => ({
+                    id: i,
+                    left: Math.random() * 100,
+                    size: 12 + Math.random() * 10,
+                    duration: 8 + Math.random() * 5,
+                    delay: Math.random() * 10,
+                    color: colors[i % colors.length]
+                }));
+            }, []);
+
+            return (
+                <div className="fixed inset-0 pointer-events-none overflow-hidden z-10 opacity-30">
+                    {hearts.map(h => (
+                        <div key={h.id} className="absolute animate-hearts" style={{ left: `${h.left}%`, animationDuration: `${h.duration}s`, animationDelay: `${h.delay}s`, color: h.color }}>
+                            <Icon name="heart" size={h.size} className="fill-current" />
                         </div>
                     ))}
                 </div>
             );
         };
 
-        const TricolorRain = () => {
-            const items = useMemo(() => {
-                const colors = ['#FF9933', '#FFFFFF', '#138808'];
-                return Array.from({ length: 40 }).map((_, i) => ({
-                    id: i, left: Math.random() * 100, size: 4 + Math.random() * 6,
-                    duration: 6 + Math.random() * 8, delay: Math.random() * 15, color: colors[i % colors.length]
-                }));
-            }, []);
-
-            return (
-                <div className="fixed inset-0 pointer-events-none overflow-hidden z-10 opacity-20">
-                    {items.map(p => (
-                        <div key={p.id} className="absolute animate-petals" style={{ left: `${p.left}%`, width: p.size, height: p.size, backgroundColor: p.color, borderRadius: '2px 8px', animationDuration: `${p.duration}s`, animationDelay: `${p.delay}s` }}></div>
-                    ))}
-                </div>
-            );
-        };
-
-        const AshokaChakra = () => (
-            <div className="relative w-40 h-40 flex items-center justify-center">
-                <div className="absolute w-56 h-56 bg-orange-500 rounded-full blur-[40px] animate-aura"></div>
-                <div className="absolute w-48 h-48 bg-white/10 rounded-full blur-[20px]"></div>
-                <div className="absolute w-64 h-64 bg-green-600 rounded-full blur-[50px] animate-aura delay-1000"></div>
-                <svg width="120" height="120" viewBox="0 0 100 100" className="relative z-10 animate-chakra">
-                    <circle cx="50" cy="50" r="46" fill="none" stroke="#000080" strokeWidth="2.5" />
-                    <circle cx="50" cy="50" r="6" fill="none" stroke="#000080" strokeWidth="2" />
-                    <circle cx="50" cy="50" r="2" fill="#000080" />
-                    {[...Array(24)].map((_, i) => (
-                        <g key={i} transform={`rotate(${i * 15} 50 50)`}>
-                            <line x1="50" y1="50" x2="50" y2="6" stroke="#000080" strokeWidth="1.2" />
-                            <circle cx="50" cy="6" r="1.5" fill="#000080" />
-                        </g>
-                    ))}
-                </svg>
-            </div>
-        );
-
-        const WelcomeScreen = ({ isDarkMode, onOpen, onThemeToggle }) => (
-            <div className={`fixed inset-0 flex flex-col items-center justify-center p-8 transition-colors duration-500 overflow-hidden ${isDarkMode ? 'bg-[#020617] text-white' : 'bg-slate-50 text-slate-900'}`}>
-                <BalloonSky isDarkMode={isDarkMode} />
-                <TricolorRain />
-                <div className="max-w-sm w-full text-center relative z-10">
-                    <CountdownTimer isDarkMode={isDarkMode} />
-                    <div className="relative w-72 h-80 mx-auto mb-10 flex flex-col items-center justify-center">
-                        <AshokaChakra />
-                        <div className={`text-6xl font-black italic tracking-tighter ${isDarkMode ? 'text-orange-400 saffron-glow' : 'text-orange-600'} drop-shadow-2xl mt-8 leading-none`}>2026</div>
-                        <div className={`text-[10px] font-black uppercase tracking-[0.4em] mt-2 ${isDarkMode ? 'text-white/60' : 'text-slate-500'}`}>Republic Day Edition</div>
-                    </div>
-                    <h1 className="text-3xl font-black uppercase italic mb-1 tracking-tighter text-orange-400 saffron-glow">Rummy Scorer</h1>
-                    <h2 className="text-5xl font-black uppercase tracking-widest mb-10 leading-none text-white/30">Ledger</h2>
-                    <div className="flex gap-2">
-                        <button onClick={onOpen} className="flex-1 h-16 bg-orange-600 hover:bg-orange-500 text-white rounded-3xl font-black uppercase tracking-[0.2em] shadow-2xl active:scale-95 transition-all flex items-center justify-center gap-3">Open Table</button>
-                        <button onClick={onThemeToggle} className="w-16 h-16 rounded-3xl flex items-center justify-center shadow-2xl btn-active bg-slate-800 text-yellow-400 transition-all border border-white/5"><Icon name={isDarkMode ? "sun" : "moon"} /></button>
-                    </div>
+        const HeartCenterpiece = () => (
+            <div className="relative w-48 h-64 flex items-center justify-center">
+                <div className="absolute w-72 h-72 bg-rose-600 rounded-full blur-[90px] animate-aura"></div>
+                <div className="absolute w-56 h-56 bg-pink-600 rounded-full blur-[50px] animate-aura delay-1000"></div>
+                <div className="relative z-10 animate-heart-pulse text-rose-500">
+                    <svg width="140" height="140" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                    </svg>
                 </div>
             </div>
         );
@@ -281,7 +222,7 @@
             useEffect(() => {
                 localStorage.setItem(STORAGE_KEY, JSON.stringify(game));
                 localStorage.setItem(THEME_KEY, isDarkMode.toString());
-                document.body.style.backgroundColor = isDarkMode ? "#020617" : "#f1f5f9";
+                document.body.style.backgroundColor = isDarkMode ? "#1c0a0a" : "#fff1f2";
             }, [game, isDarkMode]);
 
             useEffect(() => {
@@ -290,8 +231,11 @@
                 }
             }, [game.rounds, showWelcome]);
 
+            // --- DEPLOYMENT LOCKED LOGIC ---
+
             const isPlayerLocked = (pIdx) => {
                 if (!ui.bust) return false;
+                // Re-entry is allowed if ANY active player who did NOT bust this hand is below 180.
                 const safeOpponents = ui.bust.proj.filter((t, idx) => 
                     idx !== pIdx && !inactive.includes(idx) && !ui.bust.idxs.includes(idx)
                 );
@@ -328,17 +272,20 @@
                 const pIdx = ui.bust.current;
                 const locked = isPlayerLocked(pIdx);
                 let upIn = [...inactive]; let upRe = [...reEntries];
+                
                 if (rejoin && !locked) {
                     scores[pIdx] = ui.bust.target - totals[pIdx];
                     upRe[pIdx] = (upRe[pIdx] || 0) + 1;
                 } else {
                     if (!upIn.includes(pIdx)) upIn.push(pIdx);
                 }
+
                 const remaining = ui.bust.idxs.filter(i => i !== pIdx);
                 if (remaining.length === 0) {
                     setGame(g => ({ ...g, inactive: upIn, reEntries: upRe, rounds: [...g.rounds, scores] }));
                     setUi(u => ({ ...u, bust: null, add: false })); setForm(f => ({ ...f, scores: {} }));
                 } else {
+                    // Update state to reflect choice visually while processing the next busted player
                     setGame(g => ({ ...g, inactive: upIn, reEntries: upRe }));
                     setUi(u => ({ ...u, bust: { ...u.bust, current: remaining[0], idxs: remaining, pending: scores } }));
                 }
@@ -349,7 +296,7 @@
                 const activeHigh = activeTotals.length > 0 ? Math.max(...activeTotals) : 0;
                 setGame(g => ({
                     ...g, players: [...g.players, form.name.trim()], 
-                    reEntries: [...(g.reEntries || Array(g.players.length).fill(0)), 0],
+                    reEntries: [...(g.reEntries || new Array(g.players.length).fill(0)), 0],
                     rounds: g.rounds.map((r, i) => i === 0 ? [...r, activeHigh + 1] : [...r, 0])
                 }));
                 setForm(f => ({ ...f, name: '' }));
@@ -364,7 +311,7 @@
 
             const startNewMatch = () => {
                 if (rounds.length === 0) return;
-                setUi(u => ({ ...u, confirm: { msg: "Archive match and reset table to 0?", fn: () => {
+                setUi(u => ({ ...u, confirm: { msg: "Archive this session and clear table?", fn: () => {
                     const summary = { id: Date.now(), ts: Date.now(), players: [...players], rounds: [...rounds], inactive: [...inactive], reEntries: [...reEntries], finalScores: [...totals] };
                     setGame(prev => ({ ...prev, rounds: [], inactive: [], reEntries: new Array(prev.players.length).fill(0), history: [summary, ...(prev.history || [])].slice(0, 10) }));
                     setUi(prevUi => ({ ...prevUi, confirm: null }));
@@ -372,28 +319,46 @@
             };
 
             const restoreSession = (log) => {
-                setUi({ ...ui, confirm: { msg: "Restore this session? Current data will be lost.", fn: () => {
+                setUi({ ...ui, confirm: { msg: "Restore this archive? Current session will be replaced.", fn: () => {
                     setGame(prev => ({ ...prev, players: log.players, rounds: log.rounds, inactive: log.inactive || [], reEntries: log.reEntries || new Array(log.players.length).fill(0) }));
                     setUi(u => ({ ...u, history: false, confirm: null }));
                 }}});
             };
 
-            if (showWelcome) return <WelcomeScreen isDarkMode={isDarkMode} onOpen={() => setShowWelcome(false)} onThemeToggle={() => setIsDarkMode(!isDarkMode)} />;
+            if (showWelcome) {
+                return (
+                    <div className={`fixed inset-0 flex flex-col items-center justify-center p-8 transition-colors duration-500 overflow-hidden ${isDarkMode ? 'bg-[#1c0a0a] text-white' : 'bg-[#fff1f2] text-slate-900'}`}>
+                        <HeartRain />
+                        <div className="max-w-sm w-full text-center relative z-10">
+                            <CountdownTimer isDarkMode={isDarkMode} />
+                            <div className="relative w-72 h-80 mx-auto mb-10 flex flex-col items-center justify-center">
+                                <HeartCenterpiece />
+                                <div className={`text-6xl font-black italic tracking-tighter ${isDarkMode ? 'text-rose-400 rose-glow' : 'text-rose-600'} drop-shadow-2xl mt-4 leading-none`}>2026</div>
+                                <div className={`text-[10px] font-black uppercase tracking-[0.4em] mt-2 ${isDarkMode ? 'text-white/40' : 'text-slate-500'}`}>Valentine's Edition</div>
+                            </div>
+                            <h1 className="text-3xl font-black uppercase italic mb-1 tracking-tighter text-rose-500 rose-glow">Rummy Scorer</h1>
+                            <h2 className="text-5xl font-black uppercase tracking-widest mb-10 leading-none text-rose-400 opacity-20">Ledger</h2>
+                            <div className="flex gap-2">
+                                <button onClick={() => setShowWelcome(false)} className={`flex-1 h-16 bg-rose-600 hover:bg-rose-500 text-white rounded-3xl font-black uppercase tracking-widest shadow-2xl active:scale-95 transition-all flex items-center justify-center gap-3`}>Open Ledger</button>
+                                <button onClick={() => setIsDarkMode(!isDarkMode)} className={`w-16 h-16 rounded-3xl flex items-center justify-center shadow-2xl active:scale-95 transition-all bg-rose-950/50 text-rose-300 border border-rose-500/20`}><Icon name={isDarkMode ? "sun" : "moon"} /></button>
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
 
             return (
-                <div className={`fixed inset-0 flex flex-col transition-colors duration-500 overflow-hidden ${isDarkMode ? 'bg-[#020617] text-slate-100' : 'bg-slate-50 text-slate-900'}`}>
-                    <BalloonSky isDarkMode={isDarkMode} />
-                    <TricolorRain />
+                <div className={`fixed inset-0 flex flex-col transition-colors duration-500 overflow-hidden ${isDarkMode ? 'bg-[#1c0a0a] text-slate-100' : 'bg-[#fff1f2] text-slate-900'}`}>
+                    <HeartRain />
                     
-                    <nav className={`flex-none px-4 py-4 pt-safe border-b backdrop-blur-xl z-40 ${isDarkMode ? 'bg-slate-900/70 border-white/10' : 'bg-white/90 border-slate-200 shadow-sm'}`}>
+                    <nav className={`flex-none px-4 py-4 z-40 pt-safe border-b backdrop-blur-xl ${isDarkMode ? 'bg-rose-950/70 border-white/5' : 'bg-white/90 border-rose-100 shadow-sm'}`}>
                         <div className="max-w-4xl mx-auto flex items-center justify-between">
-                            <div className="flex items-center gap-2 group">
-                                <button onClick={() => setShowWelcome(true)} className="w-10 h-10 rounded-2xl flex items-center justify-center text-white shadow-lg bg-orange-600 transition-transform active:scale-90"><Icon name="home" /></button>
-                                <div className="text-left leading-none"><h1 className="text-[11px] font-black uppercase tracking-tight text-orange-400">Rummy Scorer</h1><span className="text-[9px] font-bold uppercase opacity-80">2026 Session</span></div>
+                            <div className="flex items-center gap-2">
+                                <button onClick={() => setShowWelcome(true)} className={`w-10 h-10 rounded-2xl flex items-center justify-center text-white shadow-lg bg-rose-600 active:scale-90 transition-all`}><Icon name="heart" /></button>
+                                <div className="text-left leading-none"><h1 className="text-[11px] font-black uppercase tracking-tight text-rose-400">Rummy Scorer</h1><span className="text-[9px] font-bold uppercase opacity-80">Valentine '26</span></div>
                             </div>
                             <div className="flex items-center gap-1">
-                                <button onClick={startNewMatch} className="p-2 opacity-70 hover:opacity-100 text-white active:scale-90 transition-all"><Icon name="rotate-ccw" /></button>
-                                <button onClick={() => setIsDarkMode(!isDarkMode)} className="p-2 opacity-70 active:scale-90 transition-all"><Icon name={isDarkMode ? "sun" : "moon"} /></button>
+                                <button onClick={startNewMatch} className="p-2 opacity-70 hover:opacity-100 text-rose-500 active:scale-90 transition-all"><Icon name="rotate-ccw" /></button>
                                 <button onClick={() => setUi({...ui, history: true})} className="p-2 opacity-70 active:scale-90 transition-all"><Icon name="history" /></button>
                                 <button onClick={() => setUi({...ui, settings: true})} className="p-2 opacity-70 active:scale-90 transition-all"><Icon name="settings-2" /></button>
                             </div>
@@ -401,15 +366,15 @@
                     </nav>
 
                     <div className="flex-1 flex flex-col overflow-hidden relative">
-                        <div className={`flex-none flex border-b-2 z-20 ${isDarkMode ? 'bg-slate-950 border-white/10' : 'bg-white shadow-sm'}`}>
-                            <div className="w-10 flex items-center justify-center text-[8px] font-black text-slate-500 italic">Hand</div>
+                        <div className={`flex-none flex border-b-2 z-20 ${isDarkMode ? 'bg-rose-950 border-white/5 shadow-lg' : 'bg-white shadow-sm'}`}>
+                            <div className="w-10 flex items-center justify-center text-[8px] font-black text-slate-500 italic uppercase">Hand</div>
                             <div className="flex-1 flex">
                                 {players.map((p, i) => (
                                     <div key={i} className={`flex-1 border-r last:border-r-0 py-3 text-center truncate transition-all duration-500 ${inactive.includes(i) ? 'player-inactive bg-black/10' : ''}`}>
                                         <div className="flex flex-col items-center justify-center px-0.5 min-w-0">
-                                            <span className="text-[10px] font-black uppercase truncate block w-full tracking-tight text-orange-400">{p}</span>
-                                            {reEntries[i] > 0 && <span className="bg-rose-600 text-white text-[6px] px-1 rounded-sm py-1">R{reEntries[i]}</span>}
-                                            {inactive.includes(i) && <span className="text-[6px] text-red-500 font-bold uppercase tracking-tighter mt-1 italic">OUT</span>}
+                                            <span className={`text-[10px] font-black uppercase truncate block w-full tracking-tight ${isDarkMode ? 'text-rose-400' : 'text-rose-700'}`}>{typeof p === 'object' ? p.name : p}</span>
+                                            {reEntries[i] > 0 && <span className="bg-rose-600 text-white text-[6px] px-1 rounded-sm leading-none py-1 font-black">R{reEntries[i]}</span>}
+                                            {inactive.includes(i) && <span className="text-[6px] text-red-500 font-bold uppercase mt-1 italic leading-none">OUT</span>}
                                         </div>
                                     </div>
                                 ))}
@@ -417,30 +382,42 @@
                         </div>
                         <div ref={scrollRef} className="flex-1 overflow-y-auto no-scrollbar bg-black/5">
                             {rounds.map((round, rIdx) => (
-                                <div key={rIdx} className={`flex border-b transition-colors ${isDarkMode ? 'border-white/5 hover:bg-white/5' : 'border-slate-200 hover:bg-white'}`}>
-                                    <div className="w-10 flex flex-col items-center justify-center py-4"><span className="text-[10px] font-bold text-slate-500">{rIdx + 1}</span><button onClick={() => { setUi({...ui, editIdx: rIdx}); const c = {}; players.forEach((p, i) => c[p] = round[i]); setForm({...form, scores: c}); }} className="text-orange-500/40 mt-1 active:scale-90 transition-all"><Icon name="pencil-line" size={12} /></button></div>
-                                    <div className="flex-1 flex">{round.map((score, cIdx) => (<div key={cIdx} className={`flex-1 border-r last:border-r-0 flex items-center justify-center py-4 transition-all duration-500 ${inactive.includes(cIdx) ? 'opacity-20 grayscale' : ''}`}>{score === 0 ? <span className="w-7 h-7 rounded-full bg-orange-600 text-white flex items-center justify-center text-[10px] font-black shadow-md border border-white/20">0</span> : <span className="text-sm font-bold tabular-nums">{score}</span>}</div>))}</div>
+                                <div key={rIdx} className={`flex border-b transition-colors ${isDarkMode ? 'border-white/5 hover:bg-white/5' : 'border-rose-100 hover:bg-white'}`}>
+                                    <div className="w-10 flex flex-col items-center justify-center py-4"><span className="text-[10px] font-bold text-slate-500">{rIdx + 1}</span><button onClick={() => { setUi({...ui, editIdx: rIdx}); const c = {}; players.forEach((p, i) => c[typeof p === 'object' ? p.name : p] = round[i]); setForm({...form, scores: c}); }} className="text-rose-500/40 mt-1 active:scale-90 transition-all"><Icon name="pencil-line" size={12} /></button></div>
+                                    <div className="flex-1 flex">
+                                        {round.map((score, cIdx) => (
+                                            <div key={cIdx} className={`flex-1 border-r last:border-r-0 flex items-center justify-center py-4 transition-all duration-500 ${inactive.includes(cIdx) ? 'opacity-20 grayscale' : ''}`}>
+                                                {score === 0 ? <span className="w-7 h-7 rounded-full bg-rose-600 text-white flex items-center justify-center text-[10px] font-black shadow-md border border-white/20">0</span> : <span className="text-sm font-bold tabular-nums">{score}</span>}
+                                            </div>
+                                        ))}
+                                    </div>
                                 </div>
                             ))}
                         </div>
-                        <div className={`flex-none flex text-white shadow-[0_-10px_30px_rgba(0,0,0,0.3)] z-30 ${isDarkMode ? 'bg-slate-900 border-t border-white/10' : 'bg-slate-800'}`}>
-                            <div className="w-10 flex items-center justify-center text-[8px] font-black italic bg-black/20 text-slate-500 uppercase">Total</div>
+                        <div className={`flex-none flex text-white shadow-[0_-10px_30px_rgba(0,0,0,0.3)] z-30 ${isDarkMode ? 'bg-rose-900 border-t border-white/5' : 'bg-rose-600'}`}>
+                            <div className="w-10 flex items-center justify-center text-[8px] font-black italic bg-black/20 text-rose-200 uppercase">Total</div>
                             <div className="flex-1 flex">
-                                {totals.map((total, i) => (<div key={i} className={`flex-1 py-4 border-r last:border-r-0 border-white/5 text-center font-black text-lg min-w-0 transition-all duration-500 ${inactive.includes(i) ? 'total-inactive grayscale' : ''}`}><span className="flex items-center justify-center gap-1">{total} {i === leaderIdx && !inactive.includes(i) && rounds.length > 0 && <Icon name="crown" size={14} className="text-amber-400 animate-bounce" />}</span></div>))}
+                                {totals.map((total, i) => (
+                                    <div key={i} className={`flex-1 py-4 border-r last:border-r-0 border-white/5 text-center font-black text-lg min-w-0 transition-all duration-500 ${inactive.includes(i) ? 'total-inactive grayscale' : ''}`}>
+                                        <span className="flex items-center justify-center gap-1">{total} {i === leaderIdx && !inactive.includes(i) && rounds.length > 0 && <Icon name="heart" size={14} className="text-rose-200 fill-current animate-bounce" />}</span>
+                                    </div>
+                                ))}
                             </div>
                         </div>
                     </div>
 
-                    <div className={`p-5 pb-safe flex-none border-t ${isDarkMode ? 'bg-slate-900/95 border-white/10' : 'bg-white border-slate-200'}`}>
+                    <div className={`p-5 pb-safe flex-none border-t ${isDarkMode ? 'bg-rose-950/90 border-white/5' : 'bg-white border-rose-200 shadow-xl'}`}>
                         {matchOver ? (
-                            <div className="text-center p-2 animate-in zoom-in-95 duration-500"><h4 className="text-xl font-black italic text-orange-500 uppercase mb-3">Victory!</h4><button onClick={startNewMatch} className="px-10 py-4 bg-orange-600 text-white rounded-full text-xs font-black uppercase active:scale-95 transition-all shadow-xl">New Match</button></div>
+                            <div className="text-center p-2 animate-in zoom-in-95 duration-500"><h4 className="text-xl font-black italic text-rose-500 uppercase mb-3 text-center">Session Over!</h4><button onClick={startNewMatch} className="px-10 py-4 bg-rose-600 text-white rounded-full text-xs font-black uppercase active:scale-95 transition-all shadow-xl">Start New</button></div>
                         ) : (
                             <div className="flex gap-2 max-w-lg mx-auto">
-                                <button onClick={() => setUi({...ui, add: true})} className="flex-1 h-16 bg-orange-600 hover:bg-orange-500 text-white rounded-3xl font-black uppercase tracking-[0.2em] shadow-xl flex items-center justify-center gap-3 transition-all active:scale-95"><Icon name="plus" size={24} /> Record Hand</button>
+                                <button onClick={() => setUi({...ui, add: true})} className="flex-1 h-16 bg-rose-600 hover:bg-rose-700 text-white rounded-3xl font-black uppercase tracking-widest shadow-xl flex items-center justify-center gap-3 active:scale-95 transition-all"><Icon name="plus" size={24} /> Record Hand</button>
                                 <button onClick={() => {
-                                    const text = `🇮🇳 Rummy Scorer Standings 🇮🇳\n\n` + players.map((p, i) => `${p}: ${totals[i]}${reEntries[i] > 0 ? ` (R${reEntries[i]})` : ''}${inactive.includes(i) ? ' (Out)' : ''}`).join('\n');
-                                    if(navigator.share) navigator.share({text}); else { const el = document.createElement('textarea'); el.value = text; document.body.appendChild(el); el.select(); document.execCommand('copy'); document.body.removeChild(el); setUi(u=>({...u, confirm: {msg: "Standings copied to clipboard!", fn: () => setUi(us=>({...us, confirm: null})) } })); }
-                                }} className="px-6 h-16 rounded-2xl font-black shadow-xl flex items-center justify-center bg-slate-800 text-orange-400 transition-all active:scale-95"><Icon name="share-2" size={24} /></button>
+                                    const text = `💝 Rummy Scorer Standings 💝\n\n` + players.map((p, i) => `${typeof p === 'object' ? p.name : p}: ${totals[i]}${reEntries[i] > 0 ? ` (R${reEntries[i]})` : ''}${inactive.includes(i) ? ' (Out)' : ''}`).join('\n');
+                                    if(navigator.share) navigator.share({text}); else { const el = document.createElement('textarea'); el.value = text; document.body.appendChild(el); el.select(); document.execCommand('copy'); document.body.removeChild(el); setUi(u=>({...u, confirm: {msg: "Scores copied to clipboard!", fn: () => setUi(us=>({...us, confirm: null})) } })); }
+                                }} className={`px-6 h-16 rounded-2xl font-black shadow-xl flex items-center justify-center transition-all active:scale-95 ${isDarkMode ? 'bg-rose-900 text-rose-400' : 'bg-rose-100 text-rose-700'}`}>
+                                    <Icon name="share-2" size={24} />
+                                </button>
                             </div>
                         )}
                     </div>
@@ -450,41 +427,60 @@
                         <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-black/90 backdrop-blur-sm animate-in fade-in">
                             
                             {(ui.add || ui.editIdx !== null) && (
-                                <div className={`w-full max-w-md rounded-[2.5rem] p-8 shadow-2xl border animate-in slide-in-from-bottom-10 ${isDarkMode ? 'bg-slate-900 border-white/10 text-white' : 'bg-white border-slate-200 text-slate-900'}`}>
-                                    <div className="flex justify-between items-center mb-6"><h3 className="text-xl font-black text-orange-500 uppercase italic">{ui.editIdx !== null ? "Edit Scores" : "Record Result"}</h3><button onClick={() => setUi({...ui, add: false, editIdx: null})} className="text-slate-500 p-2"><Icon name="x" size={28} /></button></div>
-                                    {form.error && <div className="mb-4 bg-red-500/10 p-3 rounded-xl text-[10px] font-black text-orange-500 uppercase animate-bounce">{form.error}</div>}
-                                    <div className="grid grid-cols-2 gap-4 mb-8 max-h-[40vh] overflow-y-auto pr-1 no-scrollbar">{players.map((p, idx) => !inactive.includes(idx) && (<div key={idx} className="flex flex-col gap-2"><label className="text-[10px] font-black uppercase text-slate-500 truncate">{p}</label><input type="number" inputMode="numeric" value={form.scores[p] || ''} onChange={e => setForm({...form, scores: {...form.scores, [p]: e.target.value}})} className={`w-full p-5 rounded-2xl text-center text-3xl font-black outline-none border ${isDarkMode ? 'bg-slate-950 border-white/5 text-orange-500' : 'bg-slate-50 border-slate-200'}`} placeholder="0" /></div>))}</div>
-                                    <button onClick={() => submitScores(ui.editIdx !== null)} className="w-full bg-orange-600 py-6 rounded-3xl font-black uppercase shadow-xl text-white tracking-[0.2em] transition-all active:scale-95">Confirm Hand</button>
+                                <div className={`w-full max-w-md rounded-[2.5rem] p-8 shadow-2xl border animate-in slide-in-from-bottom-10 ${isDarkMode ? 'bg-rose-950 border-white/5 text-white' : 'bg-white border-rose-100 text-slate-900'}`}>
+                                    <div className="flex justify-between items-center mb-6"><h3 className="text-xl font-black text-rose-500 uppercase italic">{ui.editIdx !== null ? "Edit Scores" : "New Hand"}</h3><button onClick={() => setUi({...ui, add: false, editIdx: null})} className="text-slate-500 p-2"><Icon name="x" size={28} /></button></div>
+                                    {form.error && <div className="mb-4 bg-red-500/10 p-3 rounded-xl text-[10px] font-black text-rose-500 uppercase animate-bounce">{form.error}</div>}
+                                    <div className="grid grid-cols-2 gap-4 mb-8 max-h-[40vh] overflow-y-auto pr-1 no-scrollbar">{players.map((p, idx) => !inactive.includes(idx) && (<div key={idx} className="flex flex-col gap-2"><label className="text-[10px] font-black uppercase text-rose-400 truncate">{typeof p === 'object' ? p.name : p}</label><input type="number" inputMode="numeric" value={form.scores[typeof p === 'object' ? p.name : p] || ''} onChange={e => setForm({...form, scores: {...form.scores, [typeof p === 'object' ? p.name : p]: e.target.value}})} className={`w-full p-5 rounded-2xl text-center text-3xl font-black outline-none border transition-all ${isDarkMode ? 'bg-rose-900/40 border-white/5 text-rose-400' : 'bg-rose-50 border-rose-100 text-rose-700'}`} placeholder="0" /></div>))}</div>
+                                    <button onClick={() => submitScores(ui.editIdx !== null)} className="w-full bg-rose-600 hover:bg-rose-700 py-6 rounded-3xl font-black uppercase shadow-xl text-white tracking-widest active:scale-95 transition-all">Confirm Scorecard</button>
                                 </div>
                             )}
 
                             {ui.settings && (
-                                <div className={`w-full max-sm rounded-[2.5rem] p-8 shadow-2xl border ${isDarkMode ? 'bg-slate-900 border-white/10 text-white' : 'bg-white border-slate-200 text-slate-900'}`}>
-                                    <h3 className="text-xl font-black text-orange-500 uppercase mb-8 flex items-center gap-3 tracking-tighter"><Icon name="users" /> Registry</h3>
-                                    <input type="text" value={form.name} onChange={e => setForm({...form, name: e.target.value})} placeholder="New Member Name" className={`w-full p-5 rounded-2xl mb-4 font-bold outline-none border ${isDarkMode ? 'bg-slate-950 border-white/5 text-indigo-400' : 'bg-slate-50 border-slate-200'}`} />
+                                <div className={`w-full max-sm rounded-[2.5rem] p-8 shadow-2xl border ${isDarkMode ? 'bg-rose-950 border-white/5 text-white' : 'bg-white border-rose-100 text-slate-900'}`}>
+                                    <h3 className="text-xl font-black text-rose-500 uppercase mb-8 flex items-center gap-3 tracking-tighter"><Icon name="users" /> Registry</h3>
+                                    <input type="text" value={form.name} onChange={e => setForm({...form, name: e.target.value})} placeholder="Player Name" className={`w-full p-5 rounded-2xl mb-4 font-bold outline-none border ${isDarkMode ? 'bg-rose-900/40 border-white/5 text-rose-400' : 'bg-rose-50 border-rose-100'}`} />
                                     <div className="grid grid-cols-2 gap-2 mb-8">
-                                        <button onClick={() => { if(form.name) { setGame(g=>({...g, players: [...g.players, form.name.trim()], rounds: [], inactive: [], reEntries: new Array(g.players.length+1).fill(0)})); setForm(f=>({...f, name:''})); setUi(u=>({...u, settings: false})); }}} className="py-4 rounded-2xl text-[10px] font-black uppercase border border-white/10 bg-slate-800 transition-all active:scale-95">Reset Table</button>
-                                        <button onClick={midGameJoin} className="py-4 bg-orange-600 text-white rounded-2xl text-[10px] font-black uppercase shadow-lg transition-all active:scale-95">Join @ Max+1</button>
+                                        <button onClick={() => { if(form.name) { setGame(g=>({...g, players: [...g.players, form.name.trim()], rounds: [], inactive: [], reEntries: new Array(g.players.length+1).fill(0)})); setForm(f=>({...f, name:''})); setUi(u=>({...u, settings: false})); }}} className={`py-4 rounded-2xl text-[10px] font-black uppercase border active:scale-95 transition-all ${isDarkMode ? 'bg-rose-900/40 border-white/5' : 'bg-rose-50 border-rose-100'}`}>Reset Pitch</button>
+                                        <button onClick={midGameJoin} className="py-4 bg-rose-600 text-white rounded-2xl text-[10px] font-black uppercase shadow-lg active:scale-95 transition-all">Join @ Max+1</button>
                                     </div>
-                                    <div className="space-y-2 mb-8 max-h-48 overflow-y-auto no-scrollbar">{players.map((p, i) => (<div key={i} className={`flex items-center justify-between p-4 rounded-2xl border transition-all duration-500 ${isDarkMode ? 'bg-white/5 border-white/10' : 'bg-slate-50 border-slate-200'} ${inactive.includes(i) ? 'opacity-30 grayscale' : ''}`}>{form.editIdx === i ? (<div className="flex-1 flex gap-2"><input type="text" value={form.editVal} onChange={e => setForm({...form, editVal: e.target.value})} className="flex-1 bg-black/40 px-3 py-1 rounded text-[10px] font-black uppercase outline-none text-orange-500" autoFocus /><button onClick={() => savePlayerNameEdit(i)} className="text-emerald-500"><Icon name="check-circle-2" /></button></div>) : (<><span className="text-[10px] font-black uppercase truncate max-w-[120px]">{p}</span><div className="flex gap-1"><button onClick={() => setForm({...form, editIdx: i, editVal: p})} className="p-2 opacity-50"><Icon name="pencil" size={16}/></button>{players.length > 2 && <button onClick={() => { setUi({...ui, confirm: { msg: `Remove ${p}? All scores will reset.`, fn: () => { setGame({...game, players: players.filter(pl => pl !== p), rounds: [], inactive: []}); setUi({...ui, confirm: null}); } }}); }} className="text-rose-500 p-2"><Icon name="user-minus" size={18}/></button>}</div></>)}</div>))}</div>
-                                    <button onClick={() => setUi({...ui, settings: false})} className="w-full py-5 bg-slate-950 text-white rounded-2xl font-black uppercase text-xs border border-white/5 transition-all active:scale-95">Back</button>
+                                    <div className="space-y-2 mb-8 max-h-48 overflow-y-auto no-scrollbar">
+                                        {players.map((p, i) => (
+                                            <div key={i} className={`flex items-center justify-between p-4 rounded-2xl border transition-all duration-500 ${isDarkMode ? 'bg-rose-900/20 border-white/5' : 'bg-rose-50 border-rose-200 shadow-sm'} ${inactive.includes(i) ? 'opacity-30 grayscale' : ''}`}>
+                                                {form.editIdx === i ? (
+                                                    <div className="flex-1 flex gap-2 min-w-0">
+                                                        <input type="text" value={form.editVal} onChange={e => setForm({...form, editVal: e.target.value})} className="flex-1 bg-black/40 px-3 py-1 rounded text-[10px] font-black uppercase outline-none text-rose-400 min-w-0" autoFocus />
+                                                        <button onClick={() => savePlayerNameEdit(i)} className="text-emerald-500 shrink-0"><Icon name="check-circle-2" /></button>
+                                                    </div>
+                                                ) : (
+                                                    <>
+                                                        <span className="text-[10px] font-black uppercase truncate max-w-[120px]">{typeof p === 'object' ? p.name : p} {inactive.includes(i) && <span className="ml-1 text-[8px]">(OUT)</span>}</span>
+                                                        <div className="flex gap-1 shrink-0">
+                                                            <button onClick={() => setForm({...form, editIdx: i, editVal: (typeof p === 'object' ? p.name : p)})} className="p-2 opacity-50"><Icon name="pencil" size={16}/></button>
+                                                            {players.length > 2 && <button onClick={() => setUi({ ...ui, confirm: { msg: `Expel player? Session will reset.`, fn: () => { setGame({...game, players: players.filter((_, idx) => idx !== i), rounds: [], inactive: []}); setUi({...ui, confirm: null}); } } })} className="text-rose-500 p-2"><Icon name="user-minus" size={18}/></button>}
+                                                        </div>
+                                                    </>
+                                                )}
+                                            </div>
+                                        ))}
+                                    </div>
+                                    <button onClick={() => setUi({...ui, settings: false})} className="w-full py-5 bg-slate-950 text-white rounded-2xl font-black uppercase text-xs active:scale-95 transition-all border border-white/5 text-center">Close Registry</button>
                                 </div>
                             )}
 
                             {ui.history && (
-                                <div className={`w-full max-w-md rounded-[2.5rem] p-8 shadow-2xl border ${isDarkMode ? 'bg-slate-900 border-white/10 text-white' : 'bg-white border-slate-200 text-slate-900'}`}>
-                                    <h3 className="text-xl font-black text-indigo-400 uppercase mb-6 flex items-center gap-3 tracking-tighter"><Icon name="history" /> History Log</h3>
+                                <div className={`w-full max-w-md rounded-[2.5rem] p-8 shadow-2xl border ${isDarkMode ? 'bg-rose-950 border-white/5 text-white' : 'bg-white border-rose-100 text-slate-900'}`}>
+                                    <h3 className="text-xl font-black text-rose-500 uppercase mb-6 flex items-center gap-3 tracking-tighter"><Icon name="history" /> History Log</h3>
                                     <div className="space-y-4 max-h-[60vh] overflow-y-auto pr-1 no-scrollbar">
                                         {sessionHistory.length === 0 ? <div className="py-20 text-center opacity-20 text-xs font-black uppercase italic tracking-widest text-center">No Archives</div> : sessionHistory.map((log) => (
-                                            <div key={log.id} className={`p-4 rounded-2xl border ${isDarkMode ? 'bg-black/20 border-white/5 shadow-inner' : 'bg-white border-slate-100 shadow-sm'}`}>
-                                                <div className="flex justify-between mb-3 border-b border-white/5 pb-2 text-yellow-500 font-black tracking-widest">
+                                            <div key={log.id} className={`p-4 rounded-2xl border ${isDarkMode ? 'bg-rose-900/20 border-white/5 shadow-inner' : 'bg-rose-50 border-rose-100 shadow-sm'}`}>
+                                                <div className="flex justify-between mb-3 border-b border-rose-500/10 pb-2 text-rose-400 font-black tracking-widest">
                                                     <span className="text-[10px]">{new Date(log.id).toLocaleDateString()}</span>
-                                                    <button onClick={() => restoreSession(log)} className="text-[8px] bg-rose-600 text-white px-2 py-1 rounded font-black uppercase transition-all active:scale-90">Restore</button>
+                                                    <button onClick={() => restoreSession(log)} className="text-[8px] bg-rose-600 text-white px-2 py-1 rounded font-black uppercase active:scale-90 transition-all">Restore</button>
                                                 </div>
                                                 <div className="grid grid-cols-2 gap-2">
                                                     {log.players.map((pName, pIdx) => (
                                                         <div key={pIdx} className="flex items-center justify-between text-[10px] opacity-80 truncate">
-                                                            <span>{pName}</span>
+                                                            <span className="truncate">{typeof pName === 'object' ? pName.name : pName}</span>
                                                             <span className="font-bold">{log.finalScores[pIdx]}</span>
                                                         </div>
                                                     ))}
@@ -492,44 +488,71 @@
                                             </div>
                                         ))}
                                     </div>
-                                    <button onClick={() => setUi({...ui, history: false})} className="w-full mt-8 py-5 bg-slate-950 text-white rounded-2xl font-black uppercase text-xs border border-white/5 transition-all active:scale-95">Close Log</button>
+                                    <button onClick={() => setUi({...ui, history: false})} className="w-full mt-8 py-5 bg-slate-950 text-white rounded-2xl font-black uppercase text-xs active:scale-95 transition-all border border-white/5 text-center">Close Logs</button>
                                 </div>
                             )}
 
                             {ui.bust && (
-                                <div className={`w-full max-sm rounded-[2.5rem] p-8 shadow-2xl border animate-in zoom-in-95 ${isDarkMode ? 'bg-slate-900 text-white border-white/10' : 'bg-white border-slate-200 text-slate-900'}`}>
+                                <div className={`w-full max-sm rounded-[2.5rem] p-8 shadow-2xl border animate-in zoom-in-95 ${isDarkMode ? 'bg-rose-950 text-white border-white/5' : 'bg-white border-rose-100 text-slate-900'}`}>
                                     <div className="text-center mb-8">
                                         <div className="w-16 h-16 bg-rose-500/10 rounded-full flex items-center justify-center mx-auto mb-4 text-rose-500">
-                                            <Icon name={isPlayerLocked(ui.bust.current) ? "lock" : "door-open"} size={32}/>
+                                            {(() => {
+                                                const pIdx = ui.bust.current;
+                                                const safeOpponents = ui.bust.proj.filter((t, idx) => 
+                                                    idx !== pIdx && !inactive.includes(idx) && !ui.bust.idxs.includes(idx)
+                                                );
+                                                const locked = safeOpponents.length > 0 && !safeOpponents.some(t => t < 180);
+                                                return <Icon name={locked ? "lock" : "heart"} size={32}/>
+                                            })()}
                                         </div>
                                         <h3 className="text-2xl font-black uppercase italic mb-4 tracking-tighter leading-none">Bust Alert!</h3>
                                         <p className="text-xs font-bold uppercase opacity-60 px-4 leading-relaxed tracking-tighter text-center">
-                                            {players[ui.bust.current]} passed 200. <br/>
-                                            {isPlayerLocked(ui.bust.current) 
-                                                ? "The Door is Closed. Remaining safe opponent is at 180+." 
-                                                : `Re-buy handicap entry at ${ui.bust.target}?`}
+                                            {typeof players[ui.bust.current] === 'object' ? players[ui.bust.current].name : players[ui.bust.current]} passed 200. <br/>
+                                            {(() => {
+                                                const pIdx = ui.bust.current;
+                                                const safeOpponents = ui.bust.proj.filter((t, idx) => 
+                                                    idx !== pIdx && !inactive.includes(idx) && !ui.bust.idxs.includes(idx)
+                                                );
+                                                const locked = safeOpponents.length > 0 && !safeOpponents.some(t => t < 180);
+                                                return locked 
+                                                    ? "The Door is Closed. Remaining safe opponent is at 180+." 
+                                                    : `Re-buy for ${ui.bust.target} points?`;
+                                            })()}
                                         </p>
                                     </div>
                                     <div className="grid grid-cols-2 gap-4">
                                         <button 
                                             onClick={() => solveBust(true)} 
-                                            disabled={isPlayerLocked(ui.bust.current)} 
-                                            className={`py-5 rounded-2xl text-xs font-black uppercase shadow-xl transition-all ${isPlayerLocked(ui.bust.current) ? 'bg-slate-800 text-slate-600 opacity-20 shadow-none cursor-not-allowed' : 'bg-orange-600 text-white btn-active shadow-lg'}`}
+                                            disabled={(() => {
+                                                const pIdx = ui.bust.current;
+                                                const safeOpponents = ui.bust.proj.filter((t, idx) => 
+                                                    idx !== pIdx && !inactive.includes(idx) && !ui.bust.idxs.includes(idx)
+                                                );
+                                                return safeOpponents.length > 0 && !safeOpponents.some(t => t < 180);
+                                            })()} 
+                                            className={`py-5 rounded-2xl text-xs font-black uppercase shadow-xl transition-all ${(() => {
+                                                const pIdx = ui.bust.current;
+                                                const safeOpponents = ui.bust.proj.filter((t, idx) => 
+                                                    idx !== pIdx && !inactive.includes(idx) && !ui.bust.idxs.includes(idx)
+                                                );
+                                                const locked = safeOpponents.length > 0 && !safeOpponents.some(t => t < 180);
+                                                return locked ? 'bg-slate-800 text-slate-600 opacity-20 shadow-none cursor-not-allowed' : 'bg-rose-600 text-white btn-active shadow-lg';
+                                            })()}`}
                                         >
                                             Re-entry
                                         </button>
-                                        <button onClick={() => solveBust(false)} className="bg-rose-700 py-5 text-white rounded-2xl text-xs font-black uppercase btn-active shadow-xl tracking-widest transition-all active:scale-95">Stay Out</button>
+                                        <button onClick={() => solveBust(false)} className="bg-rose-900/50 text-rose-200 py-5 rounded-2xl text-xs font-black uppercase btn-active shadow-xl tracking-widest active:scale-95 transition-all">Stay Out</button>
                                     </div>
                                 </div>
                             )}
 
                             {ui.confirm && (
-                                <div className="w-full max-w-xs rounded-[2.5rem] p-8 bg-slate-950 border border-white/10 text-center shadow-2xl animate-in zoom-in-95">
-                                    <Icon name="alert-triangle" size={32} className="text-orange-500 mb-4 mx-auto" />
-                                    <p className="text-sm font-black uppercase text-slate-200 mb-8 leading-tight tracking-tight text-center">{ui.confirm.msg}</p>
+                                <div className="w-full max-w-xs rounded-[2.5rem] p-8 bg-rose-950 border border-white/10 text-center shadow-2xl animate-in zoom-in-95">
+                                    <Icon name="alert-triangle" size={32} className="text-rose-400 mb-4 mx-auto" />
+                                    <p className="text-sm font-black uppercase text-rose-100 mb-8 leading-tight tracking-tight text-center">{ui.confirm.msg}</p>
                                     <div className="flex gap-2">
-                                        <button onClick={ui.confirm.fn} className="flex-1 py-4 bg-orange-600 text-white rounded-xl text-[10px] font-black uppercase transition-all active:scale-95">Yes</button>
-                                        <button onClick={() => setUi({...ui, confirm: null})} className="flex-1 py-4 bg-slate-800 text-white rounded-xl text-[10px] font-black uppercase transition-all active:scale-95">No</button>
+                                        <button onClick={ui.confirm.fn} className="flex-1 py-4 bg-rose-600 text-white rounded-xl text-[10px] font-black uppercase transition-all active:scale-95">Yes</button>
+                                        <button onClick={() => setUi({...ui, confirm: null})} className="flex-1 py-4 bg-rose-900 text-rose-200 rounded-xl text-[10px] font-black uppercase transition-all active:scale-95">No</button>
                                     </div>
                                 </div>
                             )}
