@@ -9,10 +9,10 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Rummy Scorer">
     <meta name="mobile-web-app-capable" content="yes">
-    <meta name="theme-color" content="#1e293b">
+    <meta name="theme-color" content="#0f172a">
     
     <!-- Monsoon Icons -->
-    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 fill=%22%23334155%22/><text y=%22.9em%22 font-size=%2280%22 x=%2210%22>🌧️</text></svg>">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 fill=%22%231e293b%22/><text y=%22.9em%22 font-size=%2280%22 x=%2210%22>🌧️</text></svg>">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌧️</text></svg>">
 
     <title>Rummy Scorer - Rainy Season 2026 Production</title>
@@ -23,13 +23,16 @@
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- Screenshot Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
     <style>
         /* RAINY DAY ANIMATIONS */
         @keyframes rain-fall {
-            0% { transform: translateY(-20vh); opacity: 0; }
-            10% { opacity: 0.5; }
-            90% { opacity: 0.5; }
+            0% { transform: translateY(-25vh); opacity: 0; }
+            15% { opacity: var(--drop-opacity); }
+            85% { opacity: var(--drop-opacity); }
             100% { transform: translateY(110vh); opacity: 0; }
         }
         @keyframes cloud-pulse {
@@ -37,10 +40,10 @@
             50% { transform: scale(1.05); filter: drop-shadow(0 0 30px rgba(56, 189, 248, 0.6)); }
         }
         @keyframes lightning-flash {
-            0%, 95%, 100% { opacity: 0; }
-            97% { opacity: 1; }
-            98% { opacity: 0.2; }
-            99% { opacity: 0.8; }
+            0%, 96%, 100% { opacity: 0; }
+            97% { opacity: 0.6; }
+            98% { opacity: 0.1; }
+            99% { opacity: 0.4; }
         }
         @keyframes storm-aura {
             0% { opacity: 0.2; transform: scale(1); filter: blur(50px); }
@@ -53,11 +56,12 @@
             100% { background-position: 0% 50%; }
         }
 
-        .animate-rain { animation: rain-fall 1s linear infinite; }
+        .animate-rain { animation: rain-fall linear infinite; }
         .animate-cloud { animation: cloud-pulse 4s ease-in-out infinite; }
-        .animate-flash { animation: lightning-flash 5s infinite; }
+        .animate-flash { animation: lightning-flash 12s infinite; }
         .animate-storm { animation: storm-aura 7s ease-in-out infinite; }
         
+        /* High-End Multicolor Background */
         .monsoon-bg-multicolor {
             background: linear-gradient(-45deg, #0f172a, #1e293b, #334155, #1e1b4b, #0f172a);
             background-size: 400% 400%;
@@ -80,7 +84,7 @@
             user-select: none;
             height: 100vh;
             width: 100vw;
-            background-color: #1e293b;
+            background-color: #0f172a;
             transition: background-color 0.5s ease;
         }
         
@@ -128,21 +132,22 @@
             return <span ref={containerRef} className={`inline-flex items-center justify-center shrink-0 ${className}`} style={{ width: size, height: size }}></span>;
         };
 
-        const STORAGE_KEY = "rummy_scorer_prod_v196_monsoon";
+        const STORAGE_KEY = "rummy_scorer_prod_v198_final";
         const THEME_KEY = "rummy_scorer_theme_pref";
         const DEFAULT_ROSTER = ['Player 1', 'Player 2', 'Player 3'];
 
-        // --- Rainy Visual Components ---
+        // --- Visual Components ---
 
         const RainAnimation = () => {
             const drops = useMemo(() => {
-                return Array.from({ length: 40 }).map((_, i) => ({
+                return Array.from({ length: 60 }).map((_, i) => ({
                     id: i,
                     left: Math.random() * 100,
-                    opacity: 0.2 + Math.random() * 0.5,
-                    duration: 0.6 + Math.random() * 0.5,
-                    delay: Math.random() * 2,
-                    height: 15 + Math.random() * 20
+                    opacity: 0.1 + Math.random() * 0.4,
+                    duration: 0.4 + Math.random() * 0.6,
+                    delay: Math.random() * 5,
+                    width: 1.2 + Math.random() * 0.8,
+                    height: 25 + Math.random() * 35
                 }));
             }, []);
 
@@ -151,15 +156,18 @@
                     {drops.map(drop => (
                         <div key={drop.id} className="absolute animate-rain" style={{ 
                             left: `${drop.left}%`, 
-                            top: '-20px',
-                            width: '1.5px',
+                            top: '-60px',
+                            width: `${drop.width}px`,
                             height: `${drop.height}px`,
                             background: `linear-gradient(to bottom, transparent, rgba(56, 189, 248, ${drop.opacity}))`,
+                            borderRadius: '2px 2px 0 0',
+                            filter: 'blur(0.4px)',
+                            '--drop-opacity': drop.opacity,
                             animationDuration: `${drop.duration}s`, 
                             animationDelay: `${drop.delay}s` 
                         }}></div>
                     ))}
-                    <div className="absolute inset-0 bg-white animate-flash pointer-events-none"></div>
+                    <div className="absolute inset-0 bg-sky-100 animate-flash pointer-events-none"></div>
                 </div>
             );
         };
@@ -174,7 +182,7 @@
                             <path d="M17.5,19c0,0.3-0.1,0.5-0.2,0.8c-0.2,0.3-0.5,0.2-0.8,0.2c-0.3,0-0.5-0.1-0.8-0.2c-0.3-0.2-0.2-0.5-0.2-0.8 c0-0.3,0.1-0.5,0.2-0.8c0.2-0.3,0.5-0.2,0.8-0.2c0.3,0,0.5,0.1,0.8,0.2C17.4,18.5,17.5,18.7,17.5,19z M13.5,21 c0,0.3-0.1,0.5-0.2,0.8c-0.2,0.3-0.5,0.2-0.8,0.2c-0.3,0-0.5-0.1-0.8-0.2c-0.3-0.2-0.2-0.5-0.2-0.8s0.1-0.5,0.2-0.8 c0.2-0.3,0.5-0.2,0.8-0.2c0.3,0,0.5,0.1,0.8,0.2C13.4,20.5,13.5,20.7,13.5,21z M9.5,19c0,0.3-0.1,0.5-0.2,0.8 c-0.2,0.3-0.5,0.2-0.8,0.2c-0.3,0-0.5-0.1-0.8-0.2c-0.3-0.2-0.2-0.5-0.2-0.8c0-0.3,0.1-0.5,0.2-0.8c0.2-0.3,0.5-0.2,0.8-0.2 c0.3,0,0.5,0.1,0.8,0.2C9.4,18.5,9.5,18.7,9.5,19z M19.3,15.1C20.9,13.9,22,12.1,22,10c0-3.3-2.7-6-6-6c-0.1,0-0.2,0-0.3,0 c-1.3-1.8-3.4-3-5.7-3c-3.9,0-7,3.1-7,7c0,0.3,0,0.5,0.1,0.8C1.3,10.2,0,11.9,0,14c0,2.8,2.2,5,5,5h14c2.2,0,4-1.8,4-4 C23,13.1,21.4,11.5,19.3,15.1z" />
                         </svg>
                     </div>
-                    <div className="mt-[-80px] text-yellow-400">
+                    <div className="mt-[-80px] text-yellow-400 drop-shadow-[0_0_10px_rgba(250,204,21,0.6)]">
                          <svg width="40" height="60" viewBox="0 0 24 24" fill="currentColor">
                             <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
                          </svg>
@@ -209,7 +217,7 @@
 
             return (
                 <div className="flex flex-col items-center mb-6 relative z-20">
-                    <div className="text-[10px] font-black uppercase tracking-[0.5em] mb-3 opacity-70 rain-text">Monsoon Season Countdown</div>
+                    <div className="text-[10px] font-black uppercase tracking-[0.5em] mb-3 opacity-70 rain-text">Monsoon 2026 Season Launch</div>
                     <div className="flex gap-4">
                         {[
                             { label: 'Days', value: timeLeft.d },
@@ -244,7 +252,7 @@
                 return { players: DEFAULT_ROSTER, rounds: [], history: [], inactive: [], reEntries: new Array(DEFAULT_ROSTER.length).fill(0) };
             });
 
-            const [ui, setUi] = useState({ add: false, editIdx: null, settings: false, history: false, bust: null, confirm: null });
+            const [ui, setUi] = useState({ add: false, editIdx: null, settings: false, history: false, bust: null, confirm: null, isSharing: false });
             const [form, setForm] = useState({ scores: {}, name: '', editIdx: null, editVal: '', error: null });
             const scrollRef = useRef(null);
 
@@ -262,7 +270,7 @@
             useEffect(() => {
                 localStorage.setItem(STORAGE_KEY, JSON.stringify(game));
                 localStorage.setItem(THEME_KEY, isDarkMode.toString());
-                if (!showWelcome) document.body.style.backgroundColor = isDarkMode ? "#1e293b" : "#f1f5f9";
+                if (!showWelcome) document.body.style.backgroundColor = isDarkMode ? "#0f172a" : "#f1f5f9";
             }, [game, isDarkMode, showWelcome]);
 
             useEffect(() => {
@@ -271,6 +279,7 @@
                 }
             }, [game.rounds, showWelcome]);
 
+            // Locked logic functions
             const isPlayerLocked = (pIdx) => {
                 if (!ui.bust) return false;
                 const safeOpponents = ui.bust.proj.filter((t, idx) => 
@@ -333,10 +342,11 @@
             const midGameJoin = () => {
                 if(!form.name.trim()) return;
                 const activeHigh = activeTotals.length > 0 ? Math.max(...activeTotals) : Math.max(...totals);
+                const joinScore = activeHigh + 1;
                 setGame(g => ({
                     ...g, players: [...g.players, form.name.trim()], 
                     reEntries: [...(g.reEntries || new Array(g.players.length).fill(0)), 0],
-                    rounds: g.rounds.map((r, i) => i === 0 ? [...r, activeHigh + 1] : [...r, 0])
+                    rounds: g.rounds.map((r, i) => i === 0 ? [...r, joinScore] : [...r, 0])
                 }));
                 setForm(f => ({ ...f, name: '' }));
             };
@@ -350,7 +360,7 @@
 
             const startNewMatch = () => {
                 if (rounds.length === 0) return;
-                setUi(u => ({ ...u, confirm: { msg: "Archive this session and head home?", fn: () => {
+                setUi(u => ({ ...u, confirm: { msg: "Archive this session and head to shelter?", fn: () => {
                     const summary = { id: Date.now(), ts: Date.now(), players: [...players], rounds: [...rounds], inactive: [...inactive], reEntries: [...reEntries], finalScores: [...totals] };
                     setGame(prev => ({ ...prev, rounds: [], inactive: [], reEntries: new Array(prev.players.length).fill(0), history: [summary, ...(prev.history || [])].slice(0, 10) }));
                     setUi(prevUi => ({ ...prevUi, confirm: null }));
@@ -358,7 +368,7 @@
             };
 
             const restoreSession = (log) => {
-                setUi({ ...ui, confirm: { msg: "Restore session? Current match will be replaced.", fn: () => {
+                setUi({ ...ui, confirm: { msg: "Restore session? Current match will be lost.", fn: () => {
                     setGame(prev => ({ 
                         ...prev, 
                         players: log.players, 
@@ -368,6 +378,33 @@
                     }));
                     setUi(u => ({ ...u, history: false, confirm: null }));
                 }}});
+            };
+
+            const shareAsScreenshot = async () => {
+                const element = document.getElementById('scoreboard-capture');
+                if (!element || !window.html2canvas) return;
+                setUi(prev => ({ ...prev, isSharing: true }));
+                try {
+                    const canvas = await html2canvas(element, {
+                        backgroundColor: isDarkMode ? "#0f172a" : "#f1f5f9",
+                        scale: 2, logging: false, useCORS: true,
+                        ignoreElements: (el) => el.tagName === 'NAV' || el.classList.contains('p-5')
+                    });
+                    canvas.toBlob(async (blob) => {
+                        if (!blob) return;
+                        const file = new File([blob], "monsoon-standings.png", { type: "image/png" });
+                        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                            try { await navigator.share({ files: [file], title: 'Rummy Scorer Standings' }); } catch (e) {
+                                const link = document.createElement('a'); link.download = 'rummy-standings.png'; link.href = URL.createObjectURL(blob); link.click();
+                            }
+                        } else {
+                            const link = document.createElement('a'); link.download = 'rummy-standings.png'; link.href = URL.createObjectURL(blob); link.click();
+                        }
+                        setUi(prev => ({ ...prev, isSharing: false }));
+                    }, "image/png");
+                } catch (error) {
+                    setUi(prev => ({ ...prev, isSharing: false }));
+                }
             };
 
             if (showWelcome) {
@@ -380,7 +417,6 @@
                             <div className={`text-6xl font-black italic tracking-tighter storm-glow drop-shadow-2xl mt-4 leading-none`}>2026</div>
                             <h1 className="text-3xl font-black uppercase italic mb-1 tracking-tighter text-blue-100 storm-glow">Rummy Scorer</h1>
                             <h2 className="text-5xl font-black uppercase tracking-widest leading-none text-white/20 mb-12">Monsoon</h2>
-                            
                             <div className="flex gap-2 w-full max-w-xs">
                                 <button onClick={() => setShowWelcome(false)} className={`flex-1 h-16 bg-blue-600 hover:bg-blue-500 text-white rounded-3xl font-black uppercase tracking-[0.2em] shadow-2xl active:scale-95 transition-all flex items-center justify-center gap-3 border border-blue-400/30`}>Open Ledger</button>
                                 <button onClick={() => setIsDarkMode(!isDarkMode)} className={`w-16 h-16 rounded-3xl flex items-center justify-center shadow-2xl active:scale-95 transition-all bg-slate-900/50 text-blue-400 border border-blue-500/20`}><Icon name={isDarkMode ? "sun" : "moon"} /></button>
@@ -391,13 +427,13 @@
             }
 
             return (
-                <div className={`fixed inset-0 flex flex-col transition-colors duration-500 overflow-hidden ${isDarkMode ? 'bg-[#1e293b] text-slate-100' : 'bg-[#f1f5f9] text-slate-900'}`}>
+                <div className={`fixed inset-0 flex flex-col transition-colors duration-500 overflow-hidden ${isDarkMode ? 'bg-[#0f172a] text-slate-100' : 'bg-[#f1f5f9] text-slate-900'}`}>
                     <RainAnimation />
                     <nav className={`flex-none px-4 py-4 z-40 pt-safe border-b backdrop-blur-xl ${isDarkMode ? 'bg-slate-900/70 border-white/5' : 'bg-white/90 border-slate-200 shadow-sm'}`}>
                         <div className="max-w-4xl mx-auto flex items-center justify-between">
                             <div className="flex items-center gap-2 group">
                                 <button onClick={() => setShowWelcome(true)} className="w-10 h-10 rounded-2xl flex items-center justify-center text-white shadow-lg bg-blue-600 active:scale-90 transition-all"><Icon name="cloud-rain" /></button>
-                                <div className="text-left leading-none"><h1 className="text-[11px] font-black uppercase tracking-tight text-blue-400">Rummy Scorer</h1><span className="text-[9px] font-bold uppercase opacity-80 italic">Rainy Season '26</span></div>
+                                <div className="text-left leading-none"><h1 className="text-[11px] font-black uppercase tracking-tight text-blue-400">Rummy Scorer</h1><span className="text-[9px] font-bold uppercase opacity-80 italic">Monsoon Edition</span></div>
                             </div>
                             <div className="flex items-center gap-1">
                                 <button onClick={startNewMatch} className="p-2 opacity-70 hover:opacity-100 text-blue-500 active:scale-90 transition-all"><Icon name="rotate-ccw" /></button>
@@ -407,8 +443,8 @@
                         </div>
                     </nav>
 
-                    <div className="flex-1 flex flex-col overflow-hidden relative">
-                        <div className={`flex-none flex border-b-2 z-20 ${isDarkMode ? 'bg-slate-950 border-white/5 shadow-lg' : 'bg-white shadow-sm'}`}>
+                    <div id="scoreboard-capture" className="flex-1 flex flex-col overflow-hidden relative">
+                        <div className={`flex-none flex border-b-2 z-20 ${isDarkMode ? 'bg-slate-950/60 border-white/5 shadow-lg' : 'bg-white shadow-sm'}`}>
                             <div className="w-10 flex items-center justify-center text-[8px] font-black text-slate-500 italic uppercase leading-none">Deal</div>
                             <div className="flex-1 flex">
                                 {players.map((p, i) => (
@@ -450,15 +486,12 @@
 
                     <div className={`p-5 pb-safe flex-none border-t z-20 ${isDarkMode ? 'bg-slate-950/90 border-white/5' : 'bg-white border-slate-100 shadow-xl'}`}>
                         {matchOver ? (
-                            <div className="text-center p-2 animate-in zoom-in-95 duration-500"><h4 className="text-xl font-black italic text-blue-600 uppercase mb-3 text-center">Storm Won!</h4><button onClick={startNewMatch} className="px-10 py-4 bg-blue-600 text-white rounded-full text-xs font-black uppercase active:scale-95 transition-all shadow-xl">New Match</button></div>
+                            <div className="text-center p-2 animate-in zoom-in-95 duration-500"><h4 className="text-xl font-black italic text-blue-600 uppercase mb-3 text-center">Storm Over!</h4><button onClick={startNewMatch} className="px-10 py-4 bg-blue-600 text-white rounded-full text-xs font-black uppercase active:scale-95 transition-all shadow-xl">New Match</button></div>
                         ) : (
                             <div className="flex gap-2 max-w-lg mx-auto">
-                                <button onClick={() => setUi({...ui, add: true})} className="flex-1 h-16 bg-blue-600 hover:bg-blue-700 text-white rounded-3xl font-black uppercase tracking-widest shadow-xl flex items-center justify-center gap-3 active:scale-95 transition-all"><Icon name="plus" size={24} /> Record Score</button>
-                                <button onClick={() => {
-                                    const text = `🌧️ Rummy Scorer Rainy Standings 🌧️\n\n` + players.map((p, i) => `${p}: ${totals[i]}${reEntries[i] > 0 ? ` (R${reEntries[i]})` : ''}${inactive.includes(i) ? ' (Out)' : ''}`).join('\n');
-                                    if(navigator.share) navigator.share({text}); else { const el = document.createElement('textarea'); el.value = text; document.body.appendChild(el); el.select(); document.execCommand('copy'); document.body.removeChild(el); setUi(u=>({...u, confirm: {msg: "Scores copied to clipboard!", fn: () => setUi(us=>({...us, confirm: null})) } })); }
-                                }} className={`px-6 h-16 rounded-2xl font-black shadow-xl flex items-center justify-center transition-all active:scale-95 ${isDarkMode ? 'bg-slate-900 text-blue-400' : 'bg-blue-50 text-blue-800'}`}>
-                                    <Icon name="share-2" size={24} />
+                                <button onClick={() => setUi({...ui, add: true})} className="flex-1 h-16 bg-blue-600 hover:bg-blue-700 text-white rounded-3xl font-black uppercase tracking-widest shadow-xl flex items-center justify-center gap-3 active:scale-95 transition-all"><Icon name="plus" size={24} /> Record Hand</button>
+                                <button onClick={shareAsScreenshot} disabled={ui.isSharing} className={`px-6 h-16 rounded-2xl font-black shadow-xl flex items-center justify-center transition-all active:scale-95 ${isDarkMode ? 'bg-slate-900 text-blue-400' : 'bg-blue-50 text-blue-800'} ${ui.isSharing ? 'animate-pulse' : ''}`}>
+                                    {ui.isSharing ? <Icon name="loader-2" size={24} className="animate-spin" /> : <Icon name="camera" size={24} />}
                                 </button>
                             </div>
                         )}
@@ -505,7 +538,7 @@
                                             </div>
                                         ))}
                                     </div>
-                                    <button onClick={() => setUi({...ui, settings: false})} className="w-full py-5 bg-slate-950 text-white rounded-2xl font-black uppercase text-xs active:scale-95 transition-all border border-white/5 text-center">Close</button>
+                                    <button onClick={() => setUi({...ui, settings: false})} className="w-full py-5 bg-slate-950 text-white rounded-2xl font-black uppercase text-xs active:scale-95 transition-all border border-white/5 text-center">Close Registry</button>
                                 </div>
                             )}
 
